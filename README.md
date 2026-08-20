@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JoshOS
 
-## Getting Started
+A Windows 95-style desktop that happens to be my portfolio.
 
-First, run the development server:
+**Live:** coming soon
+
+Click around: desktop icons open draggable, resizable windows about me —
+About (a working Notepad), Projects, Experience, Skills, Resume (with PDF
+download), and Contact. Don't forget the Compost Bin.
+
+## How it works
+
+- **Desktop mode** (wide screens with a pointer): a custom window manager —
+  a React Context + `useReducer` store handling open/close/focus/z-order/
+  minimize/maximize, with de-duplication (re-opening an app focuses its
+  window) and cascade placement. Windows drag and resize via `react-rnd`,
+  skinned with `98.css`.
+- **Boring mode** (phones and small screens): a fast, accessible
+  single-page site rendered from the same content. The entire desktop
+  bundle — window manager, 98.css, react-rnd — is lazy-loaded only when
+  desktop mode engages, so mobile visitors never download it.
+- **Content as data**: bio, experience, projects, and skills live in typed
+  modules under `src/content/` and feed both experiences.
+- **Pixel icons**: hand-drawn 16x16 SVGs (`src/components/desktop/icons.tsx`),
+  one shared palette, every icon carrying exactly one green accent.
+
+## Run it locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · 98.css · react-rnd ·
+Biome · pnpm · Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Credits
 
-## Learn More
+- [98.css](https://github.com/jdan/98.css) (MIT) — Windows 98 UI styles
+- [react-rnd](https://github.com/bokuweb/react-rnd) (MIT) — drag/resize
+- Desktop concept inspired by [posthog.com](https://posthog.com); all code
+  here is original.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Josh Muzi · [jmuzi04@gmail.com](mailto:jmuzi04@gmail.com) ·
+[GitHub](https://github.com/TinyXIV) ·
+[LinkedIn](https://www.linkedin.com/in/joshua-muzi-707386b2)

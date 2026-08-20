@@ -13,9 +13,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // CONFIRM at deploy: assumes the Vercel project is named josh-os.
+  metadataBase: new URL("https://josh-os.vercel.app"),
   title: "Josh Muzi — Software Engineer",
   description:
     "Software engineer in Orange County building web apps with TypeScript, React, and Next.js. Currently at REFS Labs.",
+  openGraph: {
+    title: "Josh Muzi — Software Engineer",
+    description:
+      "JoshOS: a Windows 95-style desktop that happens to be my portfolio.",
+    siteName: "JoshOS",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

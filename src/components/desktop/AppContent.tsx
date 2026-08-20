@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import type { AppId } from "./apps";
 import { AboutWindow } from "./windows/AboutWindow";
+import { CompostWindow } from "./windows/CompostWindow";
 import { ContactWindow } from "./windows/ContactWindow";
 import { ExperienceWindow } from "./windows/ExperienceWindow";
 import { ProjectsWindow } from "./windows/ProjectsWindow";
@@ -14,6 +15,7 @@ const WINDOW_CONTENT: Record<AppId, ComponentType> = {
   skills: SkillsWindow,
   resume: ResumeWindow,
   contact: ContactWindow,
+  compost: CompostWindow,
 };
 
 export function AppContent({ appId }: { appId: AppId }) {

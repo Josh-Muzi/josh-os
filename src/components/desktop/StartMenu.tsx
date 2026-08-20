@@ -42,7 +42,7 @@ export function StartMenu({
           JoshOS 1.0
         </p>
         <ul className="m-0 list-none p-0">
-          {APPS.map((app) => {
+          {APPS.filter((app) => app.inStartMenu !== false).map((app) => {
             const Icon = app.icon;
             return (
               <li key={app.id}>

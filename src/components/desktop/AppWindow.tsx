@@ -44,7 +44,10 @@ export function AppWindow({ app, win, focused, children }: AppWindowProps) {
         )
       }
     >
-      <div className="flex h-full flex-col">
+      <section
+        aria-label={`${app.title} window`}
+        className="flex h-full flex-col"
+      >
         <div className={focused ? "title-bar" : "title-bar inactive"}>
           <div className="title-bar-text">{app.title}</div>
           <div className="title-bar-controls">
@@ -71,7 +74,7 @@ export function AppWindow({ app, win, focused, children }: AppWindowProps) {
         >
           {children}
         </div>
-      </div>
+      </section>
     </Rnd>
   );
 }

@@ -183,3 +183,19 @@ const GLOBE: readonly Px[] = [
 export function GlobeIcon({ size }: PixelIconProps) {
   return <PixelSvg size={size} rects={GLOBE} />;
 }
+
+const COMPOST: readonly Px[] = [
+  [6, 1, 2, 2, GREEN],
+  [8, 2, 1, 1, GREEN_DARK],
+  [2, 3, 12, 2, INK],
+  [3, 3, 10, 1, SILVER],
+  [3, 5, 10, 9, INK],
+  [4, 6, 8, 7, SILVER],
+  [6, 6, 1, 7, SILVER_SHADE],
+  [9, 6, 1, 7, SILVER_SHADE],
+  [7, 8, 2, 2, GREEN],
+];
+
+export function CompostBinIcon({ size }: PixelIconProps) {
+  return <PixelSvg size={size} rects={COMPOST} />;
+}

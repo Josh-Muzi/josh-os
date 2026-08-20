@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import {
   BriefcaseIcon,
+  CompostBinIcon,
   FolderIcon,
   MailIcon,
   NotepadIcon,
@@ -15,7 +16,8 @@ export type AppId =
   | "experience"
   | "skills"
   | "resume"
-  | "contact";
+  | "contact"
+  | "compost";
 
 export interface AppDefinition {
   id: AppId;
@@ -25,6 +27,8 @@ export interface AppDefinition {
   label: string;
   icon: ComponentType<PixelIconProps>;
   defaultSize: { width: number; height: number };
+  /** Defaults to true; the Compost Bin lives on the desktop only. */
+  inStartMenu?: boolean;
 }
 
 export const APPS: AppDefinition[] = [
@@ -69,5 +73,13 @@ export const APPS: AppDefinition[] = [
     label: "Contact",
     icon: MailIcon,
     defaultSize: { width: 420, height: 320 },
+  },
+  {
+    id: "compost",
+    title: "Compost Bin",
+    label: "Compost Bin",
+    icon: CompostBinIcon,
+    defaultSize: { width: 420, height: 300 },
+    inStartMenu: false,
   },
 ];

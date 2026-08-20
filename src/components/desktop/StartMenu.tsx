@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { APPS, type AppId } from "./apps";
+import { GlobeIcon } from "./icons";
 
 interface StartMenuProps {
   onClose: () => void;
@@ -10,7 +11,7 @@ interface StartMenuProps {
 }
 
 const itemClasses =
-  "block w-full min-w-0 border-0 bg-transparent px-2 py-1.5 text-left text-sm shadow-none hover:bg-[#000080] hover:text-white";
+  "flex w-full min-w-0 items-center gap-1.5 border-0 bg-transparent px-2 py-1.5 text-left text-sm shadow-none hover:bg-[#000080] hover:text-white";
 
 export function StartMenu({
   onClose,
@@ -41,21 +42,26 @@ export function StartMenu({
           JoshOS 1.0
         </p>
         <ul className="m-0 list-none p-0">
-          {APPS.map((app) => (
-            <li key={app.id}>
-              <button
-                type="button"
-                className={itemClasses}
-                onClick={() => onOpenApp(app.id)}
-              >
-                {app.emoji} {app.label}
-              </button>
-            </li>
-          ))}
+          {APPS.map((app) => {
+            const Icon = app.icon;
+            return (
+              <li key={app.id}>
+                <button
+                  type="button"
+                  className={itemClasses}
+                  onClick={() => onOpenApp(app.id)}
+                >
+                  <Icon size={16} />
+                  <span>{app.label}</span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
         <hr />
         <button type="button" className={itemClasses} onClick={onSwitchToPlain}>
-          🌐 Switch to website mode
+          <GlobeIcon size={16} />
+          <span>Switch to website mode</span>
         </button>
       </nav>
     </>

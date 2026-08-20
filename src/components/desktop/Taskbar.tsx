@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { APPS } from "./apps";
+import { SproutIcon } from "./icons";
 import { topZ, useWindowActions, useWindows } from "./WindowManager";
 
 interface TaskbarProps {
@@ -23,16 +24,18 @@ export function Taskbar({ startOpen, onToggleStart }: TaskbarProps) {
         type="button"
         onClick={onToggleStart}
         aria-expanded={startOpen}
-        className="font-bold"
+        className="inline-flex items-center gap-1.5 font-bold"
         style={{ minWidth: 64 }}
       >
-        🌱 Start
+        <SproutIcon size={16} />
+        Start
       </button>
       <div aria-hidden className="mx-1 h-8 w-px bg-neutral-400" />
       <div className="flex min-w-0 flex-1 gap-1">
         {windows.map((win) => {
           const app = APPS.find((a) => a.id === win.appId);
           if (!app) return null;
+          const Icon = app.icon;
           const isTop = win.z === top && !win.minimized;
           return (
             <button
@@ -40,10 +43,11 @@ export function Taskbar({ startOpen, onToggleStart }: TaskbarProps) {
               type="button"
               aria-pressed={isTop}
               onClick={() => (isTop ? minimize(win.appId) : focus(win.appId))}
-              className="max-w-40 truncate text-left"
+              className="inline-flex max-w-40 items-center gap-1.5 text-left"
               style={{ minWidth: 120, fontWeight: isTop ? 700 : 400 }}
             >
-              {app.emoji} {app.title}
+              <Icon size={14} />
+              <span className="truncate">{app.title}</span>
             </button>
           );
         })}

@@ -1,3 +1,14 @@
+import type { ComponentType } from "react";
+import {
+  BriefcaseIcon,
+  FolderIcon,
+  MailIcon,
+  NotepadIcon,
+  type PixelIconProps,
+  ResumeIcon,
+  ToolboxIcon,
+} from "./icons";
+
 export type AppId =
   | "about"
   | "projects"
@@ -12,8 +23,7 @@ export interface AppDefinition {
   title: string;
   /** Desktop icon label. */
   label: string;
-  /** Placeholder icon; the real pixel icon pack is a pending taste pick. */
-  emoji: string;
+  icon: ComponentType<PixelIconProps>;
   defaultSize: { width: number; height: number };
 }
 
@@ -22,42 +32,42 @@ export const APPS: AppDefinition[] = [
     id: "about",
     title: "About Me - Notepad",
     label: "About Me",
-    emoji: "📝",
+    icon: NotepadIcon,
     defaultSize: { width: 480, height: 420 },
   },
   {
     id: "projects",
     title: "Projects",
     label: "Projects",
-    emoji: "📁",
+    icon: FolderIcon,
     defaultSize: { width: 560, height: 440 },
   },
   {
     id: "experience",
     title: "Experience",
     label: "Experience",
-    emoji: "💼",
+    icon: BriefcaseIcon,
     defaultSize: { width: 560, height: 480 },
   },
   {
     id: "skills",
     title: "Skills",
     label: "Skills",
-    emoji: "🧰",
+    icon: ToolboxIcon,
     defaultSize: { width: 460, height: 380 },
   },
   {
     id: "resume",
     title: "Resume",
     label: "Resume",
-    emoji: "📄",
+    icon: ResumeIcon,
     defaultSize: { width: 560, height: 520 },
   },
   {
     id: "contact",
     title: "Contact",
     label: "Contact",
-    emoji: "✉️",
+    icon: MailIcon,
     defaultSize: { width: 420, height: 320 },
   },
 ];

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { buttonClasses } from "./Panel";
 
 const INITIAL_ITEMS = [
   { name: "piano-app.zip", note: "composting since 2025" },
@@ -16,16 +17,22 @@ export function CompostWindow() {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs">{items.length} object(s) decomposing</p>
+      <p className="text-xs text-neutral-400">
+        {items.length} object(s) decomposing
+      </p>
       <ul className="space-y-1">
         {items.map((item) => (
           <li key={item.name}>
-            <span className="font-bold">{item.name}</span>{" "}
-            <span className="text-xs">— {item.note}</span>
+            <span className="font-medium">{item.name}</span>{" "}
+            <span className="text-xs text-neutral-500">— {item.note}</span>
           </li>
         ))}
       </ul>
-      <button type="button" onClick={() => setItems([])}>
+      <button
+        type="button"
+        className={buttonClasses}
+        onClick={() => setItems([])}
+      >
         Empty Compost
       </button>
     </div>

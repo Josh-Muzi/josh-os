@@ -13,34 +13,47 @@ export default function OpenGraphImage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#0E7A5F",
+        backgroundColor: "#9CBF87",
       }}
     >
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          backgroundColor: "#C0C0C0",
-          padding: 10,
-          boxShadow: "10px 10px 0 rgba(0,0,0,0.35)",
+          backgroundColor: "#FFFFFF",
+          borderRadius: 24,
+          overflow: "hidden",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.25)",
         }}
       >
         <div
           style={{
             display: "flex",
-            backgroundColor: "#000080",
-            color: "#FFFFFF",
-            padding: "12px 22px",
-            fontSize: 30,
+            alignItems: "center",
+            gap: 14,
+            backgroundColor: "#F5F5F4",
+            color: "#1C1C1A",
+            padding: "16px 26px",
+            fontSize: 28,
+            borderBottom: "1px solid #E7E5E4",
           }}
         >
+          <div
+            style={{
+              display: "flex",
+              width: 18,
+              height: 18,
+              backgroundColor: "#2F9E44",
+              borderRadius: 4,
+            }}
+          />
           JoshOS
         </div>
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "#C0C0C0",
+            backgroundColor: "#FFFFFF",
             padding: "34px 56px",
           }}
         >

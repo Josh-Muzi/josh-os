@@ -4,8 +4,8 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { PlainSite } from "./site/PlainSite";
 
-// The desktop bundle (98.css, react-rnd, window manager) loads only when
-// desktop mode engages — phones never pay for it.
+// The desktop bundle (react-rnd, window manager) loads only when
+// desktop mode engages — plain mode never pays for it.
 const Desktop = dynamic(
   () => import("./desktop/Desktop").then((mod) => mod.Desktop),
   {
@@ -13,7 +13,7 @@ const Desktop = dynamic(
     loading: () => (
       <div
         className="flex h-dvh items-center justify-center text-white"
-        style={{ background: "#0e7a5f" }}
+        style={{ background: "#9cbf87" }}
       >
         <p>Starting JoshOS…</p>
       </div>
@@ -55,7 +55,7 @@ export function Experience() {
       <button
         type="button"
         onClick={() => switchMode("desktop")}
-        className="fixed top-4 right-4 hidden rounded-md border border-emerald-700 bg-white px-4 py-2 text-sm font-medium text-emerald-700 shadow-sm hover:bg-emerald-50 lg:block"
+        className="fixed top-4 right-4 z-50 rounded-full border border-emerald-800/20 bg-white/90 px-4 py-2 text-sm font-medium text-emerald-800 shadow-md backdrop-blur hover:bg-white"
       >
         Launch JoshOS →
       </button>

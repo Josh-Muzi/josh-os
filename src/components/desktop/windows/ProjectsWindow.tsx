@@ -1,26 +1,24 @@
 import { projects } from "@/content";
 import { FolderIcon } from "../icons";
-
-const linkClasses = "text-[#000080] underline";
+import { linkClasses, Panel } from "./Panel";
 
 export function ProjectsWindow() {
   return (
     <div className="space-y-3">
-      <p className="text-xs">{projects.length} object(s)</p>
+      <p className="text-xs text-neutral-400">{projects.length} object(s)</p>
       {projects.map((project) => (
-        <fieldset key={project.slug}>
-          <legend className="flex items-center gap-1.5">
+        <Panel key={project.slug} title={project.name}>
+          <p className="flex items-center gap-1.5 font-medium">
             <FolderIcon size={16} />
-            {project.name}
-          </legend>
-          <p className="font-bold">{project.tagline}</p>
+            {project.tagline}
+          </p>
           {project.description.map((paragraph) => (
-            <p key={paragraph} className="mt-2">
-              {paragraph}
-            </p>
+            <p key={paragraph}>{paragraph}</p>
           ))}
-          <p className="mt-2">Stack: {project.stack.join(", ")}</p>
-          <p className="mt-2 flex flex-wrap items-center gap-3">
+          <p className="text-xs text-neutral-500">
+            {project.stack.join(" · ")}
+          </p>
+          <p className="flex flex-wrap items-center gap-3">
             {project.repoUrl && (
               <a
                 href={project.repoUrl}
@@ -41,9 +39,9 @@ export function ProjectsWindow() {
                 Visit live site
               </a>
             )}
-            <span className="text-xs">[{project.status}]</span>
+            <span className="text-xs text-neutral-400">[{project.status}]</span>
           </p>
-        </fieldset>
+        </Panel>
       ))}
     </div>
   );

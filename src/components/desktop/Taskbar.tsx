@@ -6,32 +6,31 @@ import { SproutIcon } from "./icons";
 import { topZ, useWindowActions, useWindows } from "./WindowManager";
 
 interface TaskbarProps {
-  startOpen: boolean;
-  onToggleStart: () => void;
+  menuOpen: boolean;
+  onToggleMenu: () => void;
 }
 
-export function Taskbar({ startOpen, onToggleStart }: TaskbarProps) {
+/** Modern taskbar: frosted full-width bar — menu, window pills, clock. */
+export function Taskbar({ menuOpen, onToggleMenu }: TaskbarProps) {
   const { windows } = useWindows();
   const { focus, minimize } = useWindowActions();
   const top = topZ(windows);
 
   return (
-    <footer
-      className="flex h-11 shrink-0 items-center gap-1 px-1"
-      style={{ background: "#c0c0c0", borderTop: "2px solid #fff" }}
-    >
+    <div className="absolute inset-x-0 bottom-0 z-[9000] flex h-12 items-center gap-1.5 border-t border-black/10 bg-white/80 px-2 backdrop-blur">
       <button
         type="button"
-        onClick={onToggleStart}
-        aria-expanded={startOpen}
-        className="inline-flex items-center gap-1.5 font-bold"
-        style={{ minWidth: 64 }}
+        aria-label="Open JoshOS menu"
+        aria-expanded={menuOpen}
+        onClick={onToggleMenu}
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+          menuOpen ? "bg-neutral-100" : "hover:bg-neutral-100"
+        }`}
       >
-        <SproutIcon size={16} />
-        Start
+        <SproutIcon size={18} />
       </button>
-      <div aria-hidden className="mx-1 h-8 w-px bg-neutral-400" />
-      <div className="flex min-w-0 flex-1 gap-1">
+      <div aria-hidden className="mx-0.5 h-6 w-px shrink-0 bg-neutral-200" />
+      <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
         {windows.map((win) => {
           const app = APPS.find((a) => a.id === win.appId);
           if (!app) return null;
@@ -43,17 +42,22 @@ export function Taskbar({ startOpen, onToggleStart }: TaskbarProps) {
               type="button"
               aria-pressed={isTop}
               onClick={() => (isTop ? minimize(win.appId) : focus(win.appId))}
-              className="inline-flex max-w-40 items-center gap-1.5 text-left"
-              style={{ minWidth: 120, fontWeight: isTop ? 700 : 400 }}
+              className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm ${
+                isTop
+                  ? "bg-neutral-100 font-medium text-neutral-900"
+                  : "text-neutral-600 hover:bg-neutral-50"
+              }`}
             >
-              <Icon size={14} />
-              <span className="truncate">{app.title}</span>
+              <Icon size={16} />
+              <span className="hidden max-w-28 truncate sm:inline">
+                {app.label}
+              </span>
             </button>
           );
         })}
       </div>
       <Clock />
-    </footer>
+    </div>
   );
 }
 
@@ -64,11 +68,8 @@ function Clock() {
     return () => window.clearInterval(id);
   }, []);
   return (
-    <div
-      className="px-3 py-1 text-sm"
-      style={{ boxShadow: "inset 1px 1px #808080, inset -1px -1px #fff" }}
-    >
+    <span className="shrink-0 px-2 text-sm text-neutral-600 tabular-nums">
       {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-    </div>
+    </span>
   );
 }

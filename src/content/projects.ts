@@ -6,7 +6,7 @@ export const projects: Project[] = [
     name: "JoshOS (this site)",
     tagline: "A Windows 95-style desktop that happens to be my portfolio.",
     description: [
-      "Custom window manager (React context + reducer) with focus, z-index, minimize, and maximize — no desktop framework, just react-rnd for drag/resize and 98.css for the chrome.",
+      "Custom window manager (React context + reducer) with focus, z-index, minimize, and maximize — plus draggable desktop icons. No UI framework: hand-built modern chrome, hand-drawn pixel icons, react-rnd for drag/resize.",
       "One typed content source renders as draggable windows on desktop and as a fast, accessible single page on phones.",
     ],
     stack: [
@@ -14,7 +14,6 @@ export const projects: Project[] = [
       "TypeScript",
       "React",
       "Tailwind",
-      "98.css",
       "react-rnd",
       "Vercel",
     ],

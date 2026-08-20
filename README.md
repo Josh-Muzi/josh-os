@@ -13,12 +13,15 @@ download), and Contact. Don't forget the Compost Bin.
 - **Desktop mode** (wide screens with a pointer): a custom window manager —
   a React Context + `useReducer` store handling open/close/focus/z-order/
   minimize/maximize, with de-duplication (re-opening an app focuses its
-  window) and cascade placement. Windows drag and resize via `react-rnd`,
-  skinned with `98.css`.
+  window) and cascade placement. Windows drag and resize via `react-rnd`;
+  desktop icons are draggable too and reset home on refresh. The chrome is
+  hand-built and modern — the retro lives in the metaphor and the
+  hand-drawn pixel icons, not in beveled borders.
 - **Boring mode** (phones and small screens): a fast, accessible
   single-page site rendered from the same content. The entire desktop
-  bundle — window manager, 98.css, react-rnd — is lazy-loaded only when
-  desktop mode engages, so mobile visitors never download it.
+  bundle — window manager, react-rnd — is lazy-loaded only when desktop
+  mode engages, so mobile visitors never download it. Desktop mode also
+  adapts to phones: windows become full-screen sheets.
 - **Content as data**: bio, experience, projects, and skills live in typed
   modules under `src/content/` and feed both experiences.
 - **Pixel icons**: hand-drawn 16x16 SVGs (`src/components/desktop/icons.tsx`),
@@ -33,12 +36,11 @@ pnpm dev
 
 ## Stack
 
-Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · 98.css · react-rnd ·
+Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · react-rnd ·
 Biome · pnpm · Vercel
 
 ## Credits
 
-- [98.css](https://github.com/jdan/98.css) (MIT) — Windows 98 UI styles
 - [react-rnd](https://github.com/bokuweb/react-rnd) (MIT) — drag/resize
 - Desktop concept inspired by [posthog.com](https://posthog.com); all code
   here is original.

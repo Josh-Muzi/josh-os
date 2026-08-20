@@ -10,7 +10,6 @@
     "format": "biome format --write"
   },
   "dependencies": {
-    "98.css": "^0.1.21",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",

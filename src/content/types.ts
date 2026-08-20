@@ -23,9 +23,9 @@ export interface ExperienceEntry {
   /** null while the role is current. */
   end: string | null;
   location: string;
-  summary: string;
+  summary?: string;
   highlights: string[];
-  stack: string[];
+  stack?: string[];
 }
 
 export interface Project {

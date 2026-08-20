@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import { experience, profile, projects, skills } from "@/content";
+import {
+  experience,
+  formatJobDates,
+  profile,
+  projects,
+  skills,
+} from "@/content";
 
 function Section({
   id,
@@ -51,17 +57,21 @@ export function ExperienceSection() {
             )}
           </h3>
           <p className="text-sm text-neutral-500">
-            {job.start} – {job.end ?? "Present"} · {job.location}
+            {formatJobDates(job)} · {job.location}
           </p>
-          <p className="mt-2 text-neutral-700">{job.summary}</p>
+          {job.summary && (
+            <p className="mt-2 text-neutral-700">{job.summary}</p>
+          )}
           <ul className="mt-2 list-disc space-y-1 pl-5 text-neutral-700">
             {job.highlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>
             ))}
           </ul>
-          <p className="mt-2 text-sm text-neutral-500">
-            {job.stack.join(" · ")}
-          </p>
+          {job.stack && (
+            <p className="mt-2 text-sm text-neutral-500">
+              {job.stack.join(" · ")}
+            </p>
+          )}
         </article>
       ))}
     </Section>
@@ -130,9 +140,10 @@ export function EducationSection() {
       <article>
         <h3 className="font-semibold">{education.school}</h3>
         <p className="text-neutral-700">{education.degree}</p>
-        {education.minors && (
+        {education.minors && education.minors.length > 0 && (
           <p className="text-neutral-700">
-            Minors: {education.minors.join(", ")}
+            {education.minors.length > 1 ? "Minors" : "Minor"}:{" "}
+            {education.minors.join(", ")}
           </p>
         )}
         <p className="text-sm text-neutral-500">{education.years}</p>

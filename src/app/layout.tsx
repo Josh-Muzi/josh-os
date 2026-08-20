@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Josh Muzi — Software Engineer",
   description:
-    "Software engineer in Los Angeles building web apps with TypeScript, React, and Next.js. Currently at REFS Labs.",
+    "Software engineer in Orange County building web apps with TypeScript, React, and Next.js. Currently at REFS Labs.",
 };
 
 export default function RootLayout({

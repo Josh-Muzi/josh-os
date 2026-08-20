@@ -1,5 +1,5 @@
-import { PlainSite } from "@/components/site/PlainSite";
+import { Experience } from "@/components/Experience";
 
 export default function Home() {
-  return <PlainSite />;
+  return <Experience />;
 }

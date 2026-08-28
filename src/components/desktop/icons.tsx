@@ -199,3 +199,27 @@ const COMPOST: readonly Px[] = [
 export function CompostBinIcon({ size }: PixelIconProps) {
   return <PixelSvg size={size} rects={COMPOST} />;
 }
+
+const POND: readonly Px[] = [
+  // Fish over water: green body, ink outline hints, navy waves.
+  [3, 4, 2, 1, GREEN_DARK], // tail top
+  [2, 5, 2, 3, GREEN_DARK], // tail
+  [3, 8, 2, 1, GREEN_DARK], // tail bottom
+  [6, 3, 3, 1, GREEN_DARK], // dorsal
+  [4, 4, 8, 1, GREEN],
+  [4, 5, 9, 3, GREEN],
+  [4, 8, 8, 1, GREEN],
+  [5, 8, 6, 1, PAPER_SHADE], // belly
+  [10, 5, 2, 2, PAPER], // eye white
+  [11, 6, 1, 1, INK], // pupil
+  [13, 6, 1, 1, INK], // mouth
+  [0, 11, 16, 5, NAVY], // water
+  [1, 11, 3, 1, PAPER], // foam
+  [7, 12, 3, 1, PAPER_SHADE],
+  [12, 11, 2, 1, PAPER],
+  [3, 14, 2, 1, PAPER_SHADE],
+];
+
+export function PondIcon({ size }: PixelIconProps) {
+  return <PixelSvg size={size} rects={POND} />;
+}

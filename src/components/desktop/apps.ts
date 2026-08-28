@@ -6,6 +6,7 @@ import {
   MailIcon,
   NotepadIcon,
   type PixelIconProps,
+  PondIcon,
   ResumeIcon,
   ToolboxIcon,
 } from "./icons";
@@ -17,7 +18,8 @@ export type AppId =
   | "skills"
   | "resume"
   | "contact"
-  | "compost";
+  | "compost"
+  | "pond";
 
 export interface AppDefinition {
   id: AppId;
@@ -81,5 +83,12 @@ export const APPS: AppDefinition[] = [
     icon: CompostBinIcon,
     defaultSize: { width: 420, height: 300 },
     inStartMenu: false,
+  },
+  {
+    id: "pond",
+    title: "POND.EXE",
+    label: "POND.EXE",
+    icon: PondIcon,
+    defaultSize: { width: 560, height: 560 },
   },
 ];

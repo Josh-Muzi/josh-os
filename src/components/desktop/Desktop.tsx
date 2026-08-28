@@ -105,6 +105,7 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
             bounds="parent"
             enableResizing={false}
             position={iconPositions[app.id] ?? iconHome(app, index)}
+            // Icon layer: z=5, always under windows (WINDOW_LAYER_BASE=10).
             style={{ zIndex: 5 }}
             onDragStart={(_event, data) => {
               dragState.current = {

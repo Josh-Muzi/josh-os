@@ -3,7 +3,11 @@
 import type { ReactNode } from "react";
 import { Rnd } from "react-rnd";
 import type { AppDefinition } from "./apps";
-import { type ManagedWindow, useWindowActions } from "./WindowManager";
+import {
+  type ManagedWindow,
+  useWindowActions,
+  WINDOW_LAYER_BASE,
+} from "./WindowManager";
 
 interface AppWindowProps {
   app: AppDefinition;
@@ -87,7 +91,10 @@ export function AppWindow({
     return (
       <div
         className="absolute inset-x-2 top-2 bottom-14"
-        style={{ zIndex: win.z, display: win.minimized ? "none" : undefined }}
+        style={{
+          zIndex: WINDOW_LAYER_BASE + win.z,
+          display: win.minimized ? "none" : undefined,
+        }}
       >
         {chrome}
       </div>
@@ -108,7 +115,10 @@ export function AppWindow({
       disableDragging={win.maximized}
       enableResizing={!win.maximized}
       dragHandleClassName="app-window-titlebar"
-      style={{ zIndex: win.z, display: win.minimized ? "none" : undefined }}
+      style={{
+        zIndex: WINDOW_LAYER_BASE + win.z,
+        display: win.minimized ? "none" : undefined,
+      }}
       onMouseDown={() => focus(win.appId)}
       onDragStop={(_event, data) => move(win.appId, data.x, data.y)}
       onResizeStop={(_event, _direction, ref, _delta, position) =>

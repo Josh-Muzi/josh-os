@@ -10,6 +10,15 @@ import {
 } from "react";
 import { APPS, type AppId } from "./apps";
 
+/**
+ * Stacking contract for the desktop:
+ * icons sit at z=5 (Desktop.tsx), every window renders at
+ * WINDOW_LAYER_BASE + win.z so even the first window of a session
+ * (z=1) stacks above icons, and the taskbar/start menu live at
+ * z=9000+. Window z values only compete with each other.
+ */
+export const WINDOW_LAYER_BASE = 10;
+
 export interface ManagedWindow {
   appId: AppId;
   x: number;

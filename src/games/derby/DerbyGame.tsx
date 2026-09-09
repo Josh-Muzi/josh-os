@@ -37,6 +37,8 @@ import { SHARK_BAILOUT, SHARK_THRESHOLD, VincentDialog } from "./Vincent";
 type UiPhase = "loading" | "betting" | "racing" | "results";
 
 const NEXT_RACE_BUFFER_SEC = 10;
+/** Minimum spacing between announcer lines (ms). */
+const TICKER_GAP_MS = 1100;
 
 /**
  * Track art geometry, measured from track.png (1536x1024) and expressed
@@ -354,10 +356,28 @@ export function DerbyGame() {
     const shownEvents = new Set<number>();
     const shownBeats = new Set<number>();
 
-    const push = (text: string) => {
+    // Announcer pacing: lines queue up and release one at a time, at
+    // most one per TICKER_GAP_MS, so clustered beats stay readable.
+    const queue: string[] = [];
+    let lastShownAt = 0;
+    const show = (text: string) => {
       tickerIdRef.current += 1;
       const entry = { id: tickerIdRef.current, text };
       setTicker((current) => [entry, ...current].slice(0, 4));
+      lastShownAt = Date.now();
+    };
+    const push = (text: string) => {
+      queue.push(text);
+    };
+    const drain = (all = false) => {
+      while (
+        queue.length > 0 &&
+        (all || Date.now() - lastShownAt >= TICKER_GAP_MS)
+      ) {
+        const next = queue.shift();
+        if (next) show(next);
+        if (!all) break;
+      }
     };
 
     const step = () => {
@@ -387,6 +407,7 @@ export function DerbyGame() {
           }
         });
       }
+      drain();
 
       // Photo-finish flash the instant the winner hits the wire.
       const winnerFinish = bundle.sim.events.find(
@@ -404,6 +425,7 @@ export function DerbyGame() {
 
       if (tick >= frames.length - 1) {
         setPositions(frames[frames.length - 1]);
+        drain(true); // the finish call must never sit in the queue
         setPhase("results");
         return;
       }
@@ -709,8 +731,9 @@ export function DerbyGame() {
             </div>
           )}
 
-          {/* Announcer ticker */}
-          {phase === "racing" && (
+          {/* Announcer ticker: sized to its lines (never clipped), and
+              kept on screen through results so the finish call reads. */}
+          {(phase === "racing" || phase === "results") && (
             <div
               style={{
                 border: "2px inset #808080",
@@ -718,8 +741,11 @@ export function DerbyGame() {
                 color: "#7bd88f",
                 fontFamily: "monospace",
                 fontSize: 12,
-                padding: "4px 8px",
-                minHeight: 68,
+                lineHeight: 1.55,
+                padding: "6px 10px",
+                minHeight: `calc(4 * 1.55em + 12px)`,
+                flexShrink: 0,
+                overflowWrap: "anywhere",
               }}
             >
               {ticker.length === 0 ? "And they're off!" : null}

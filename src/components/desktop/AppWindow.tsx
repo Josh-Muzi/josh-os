@@ -90,10 +90,11 @@ export function AppWindow({
     // changes happen via the taskbar, so no pointer handlers needed here.
     return (
       <div
-        className="absolute inset-x-2 top-2 bottom-14"
+        className="absolute inset-x-2 top-2 bottom-2"
         style={{
           zIndex: WINDOW_LAYER_BASE + win.z,
           display: win.minimized ? "none" : undefined,
+          pointerEvents: "auto",
         }}
       >
         {chrome}
@@ -108,8 +109,11 @@ export function AppWindow({
       minHeight={200}
       position={win.maximized ? { x: 0, y: 0 } : { x: win.x, y: win.y }}
       size={
+        // The windows layer already stops above the taskbar, so a
+        // maximized window is simply 100% of it. (react-rnd can't
+        // evaluate calc() sizes — that was the half-height bug.)
         win.maximized
-          ? { width: "100%", height: "calc(100% - 48px)" }
+          ? { width: "100%", height: "100%" }
           : { width: win.width, height: win.height }
       }
       disableDragging={win.maximized}
@@ -118,6 +122,12 @@ export function AppWindow({
       style={{
         zIndex: WINDOW_LAYER_BASE + win.z,
         display: win.minimized ? "none" : undefined,
+        pointerEvents: "auto", // the layer itself is pass-through
+        // A tall default window on a short screen shrinks to fit the
+        // space above the taskbar instead of extending under it; the
+        // content area scrolls.
+        maxWidth: win.maximized ? undefined : `calc(100% - ${win.x}px)`,
+        maxHeight: win.maximized ? undefined : `calc(100% - ${win.y}px)`,
       }}
       onMouseDown={() => focus(win.appId)}
       onDragStop={(_event, data) => move(win.appId, data.x, data.y)}

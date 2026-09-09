@@ -14,7 +14,7 @@ import { BaitIcon } from "./BaitIcon";
 import { DexPanel } from "./DexPanel";
 import { placeholderIdentity } from "./names";
 import { downloadCatchCard } from "./photo";
-import type { BaitId } from "./rarity";
+import type { BaitId, PondSpot } from "./rarity";
 import {
   REEL_SECONDS,
   rollRarity,
@@ -180,6 +180,19 @@ export function PondGame() {
   /** Sound only when the player opted in (reads the live pond mirror). */
   const blip = useCallback((kind: Parameters<typeof playBlip>[0]) => {
     if (pondRef.current.sound) playBlip(kind);
+  }, []);
+  /**
+   * Scene intro plates show once per spot per window instance: a spot
+   * is marked "seen" on the first cast from it or when leaving it.
+   */
+  const [seenIntros, setSeenIntros] = useState<Set<PondSpot>>(() => new Set());
+  const markIntroSeen = useCallback((spot: PondSpot) => {
+    setSeenIntros((current) => {
+      if (current.has(spot)) return current;
+      const next = new Set(current);
+      next.add(spot);
+      return next;
+    });
   }, []);
   const [unlockMsg, setUnlockMsg] = useState<string | null>(null);
   const prevSpeciesRef = useRef<number | null>(null);
@@ -366,6 +379,7 @@ export function PondGame() {
             },
     }));
     setPhase("waiting");
+    markIntroSeen(state.spot);
     // Casting arc: the bobber flies in from the rod tip, then lands.
     blip("cast");
     setCastAnim(true);
@@ -392,7 +406,7 @@ export function PondGame() {
         );
       }, waitMs),
     );
-  }, [lockAction, blip]);
+  }, [lockAction, blip, markIntroSeen]);
 
   const hookIt = useCallback(() => {
     clearTimers();
@@ -412,6 +426,19 @@ export function PondGame() {
     }
     setPhase("idle");
   }, [clearTimers]);
+
+  /** Spots can change while idle or from a result screen (implicit re-cast). */
+  const canSwitchSpot =
+    phase === "idle" || phase === "caught" || phase === "escaped";
+  const switchSpot = useCallback(
+    (spot: PondSpot) => {
+      if (!canSwitchSpot) return;
+      markIntroSeen(pondRef.current.spot);
+      if (phaseRef.current !== "idle") reset(); // result screens -> idle
+      setPond((current) => ({ ...current, spot }));
+    },
+    [canSwitchSpot, markIntroSeen, reset],
+  );
 
   /** Buy a stack of bait with JoshBucks; no-op when funds are short. */
   const buyBait = useCallback(
@@ -554,10 +581,10 @@ export function PondGame() {
                     <button
                       key={s.id}
                       type="button"
-                      disabled={!unlocked || phase !== "idle"}
-                      onClick={() =>
-                        setPond((current) => ({ ...current, spot: s.id }))
-                      }
+                      // Switchable while idle OR on a result screen — a new
+                      // scene implies "cast again", so no extra click.
+                      disabled={!unlocked || !canSwitchSpot}
+                      onClick={() => switchSpot(s.id)}
                       title={
                         unlocked ? s.label : `Unlocks at ${s.milestone} species`
                       }
@@ -729,7 +756,7 @@ export function PondGame() {
                     </div>
                   </div>
                 )}
-                {phase === "idle" && (
+                {phase === "idle" && !seenIntros.has(pond.spot) && (
                   <div
                     style={{
                       position: "absolute",
@@ -1018,12 +1045,16 @@ export function PondGame() {
                       overflow: "hidden",
                     }}
                   >
+                    {/* scaleX (not a % width): exact per frame at 60fps,
+                        no layout, nothing for a transition to fight. */}
                     <div
                       style={{
                         height: "100%",
-                        width: `${progress * 100}%`,
+                        width: "100%",
+                        transformOrigin: "left center",
+                        transform: `scaleX(${Math.min(1, Math.max(0, progress))})`,
                         background: "linear-gradient(90deg, #6aa5dc, #3b6ea5)",
-                        transition: "width 80ms linear",
+                        willChange: "transform",
                       }}
                     />
                   </div>

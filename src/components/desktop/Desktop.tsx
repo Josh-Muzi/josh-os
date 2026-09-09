@@ -174,21 +174,30 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
           </Rnd>
         ))
       )}
-      {windows.map((win) => {
-        const app = APPS.find((a) => a.id === win.appId);
-        if (!app) return null;
-        return (
-          <AppWindow
-            key={win.appId}
-            app={app}
-            win={win}
-            focused={win.z === top && !win.minimized}
-            isMobile={isMobile}
-          >
-            <AppContent appId={win.appId} />
-          </AppWindow>
-        );
-      })}
+      {/* Windows layer: ends above the taskbar, so react-rnd's
+          bounds="parent" keeps windows off the bar and a maximized
+          window fills exactly the space above it. pointer-events pass
+          through the (empty) layer to the icons beneath. */}
+      <div
+        className="absolute inset-x-0 top-0 bottom-12"
+        style={{ pointerEvents: "none" }}
+      >
+        {windows.map((win) => {
+          const app = APPS.find((a) => a.id === win.appId);
+          if (!app) return null;
+          return (
+            <AppWindow
+              key={win.appId}
+              app={app}
+              win={win}
+              focused={win.z === top && !win.minimized}
+              isMobile={isMobile}
+            >
+              <AppContent appId={win.appId} />
+            </AppWindow>
+          );
+        })}
+      </div>
       {menuOpen && (
         <StartMenu
           onClose={() => setMenuOpen(false)}

@@ -5,7 +5,16 @@
  * streaks in the sewer, drifting puffs in The Cloud, CRT scanlines
  * in the Abyss).
  */
+import abyssArt from "./art/abyss.jpg";
+import cloudArt from "./art/cloud.jpg";
+import lakeArt from "./art/lake.jpg";
+import sewerArt from "./art/sewer.jpg";
 import type { BaitId, PondSpot } from "./rarity";
+
+/** Generated scene art on top, palette gradient beneath as fallback. */
+function scene(artSrc: string, fallback: string): string {
+  return `url(${artSrc}) center / cover no-repeat, ${fallback}`;
+}
 
 export interface SpotConfig {
   id: PondSpot;
@@ -29,8 +38,10 @@ export const SPOTS: SpotConfig[] = [
     milestone: 0,
     idleLine: "The pond is quiet. Cast when ready.",
     scene: {
-      background:
+      background: scene(
+        lakeArt.src,
         "linear-gradient(#7ec8e3 0 34%, #2f6f9e 34% 38%, #1d5d8c 38% 100%)",
+      ),
       text: "#eaf6ff",
       textShadow: "1px 1px #1d5d8c",
     },
@@ -41,11 +52,10 @@ export const SPOTS: SpotConfig[] = [
     milestone: 8,
     idleLine: "Something drips. The mall above is long dead.",
     scene: {
-      // Slime streaks: sparse diagonal lines over murky green water.
-      background: [
-        "repeating-linear-gradient(115deg, transparent 0 26px, rgba(142,180,90,0.16) 26px 29px)",
+      background: scene(
+        sewerArt.src,
         "linear-gradient(#5d6157 0 22%, #3f5a38 22% 27%, #2b4426 27% 100%)",
-      ].join(", "),
+      ),
       text: "#dcedc4",
       textShadow: "1px 1px #1e3019",
     },
@@ -56,11 +66,10 @@ export const SPOTS: SpotConfig[] = [
     milestone: 20,
     idleLine: "You are fishing in the sky. The uploads swim below.",
     scene: {
-      // Drifting puffs: soft white bands floating on pale cyan sky.
-      background: [
-        "repeating-linear-gradient(178deg, transparent 0 34px, rgba(255,255,255,0.5) 34px 42px, transparent 42px 76px)",
+      background: scene(
+        cloudArt.src,
         "linear-gradient(#eafaff 0 30%, #bfe6f7 30% 36%, #93cdea 36% 100%)",
-      ].join(", "),
+      ),
       text: "#1d5d8c",
       textShadow: "1px 1px #ffffff",
     },
@@ -71,11 +80,10 @@ export const SPOTS: SpotConfig[] = [
     milestone: 35,
     idleLine: "Everything deleted ends up here. It remembers you.",
     scene: {
-      // CRT scanlines over near-black purple: the deleted place.
-      background: [
-        "repeating-linear-gradient(0deg, transparent 0 3px, rgba(150,90,255,0.09) 3px 4px)",
+      background: scene(
+        abyssArt.src,
         "linear-gradient(#241436 0 24%, #170b26 24% 30%, #0a0514 30% 100%)",
-      ].join(", "),
+      ),
       text: "#cbb2ff",
       textShadow: "1px 1px #000000",
     },

@@ -80,3 +80,279 @@ body {
     opacity: 0;
   }
 }
+
+/* POND.EXE bobber physics — idle float, bite tug, water ripples. */
+.pond-bobber {
+  animation: pond-float 2.6s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+.pond-bobber--bite {
+  /* Sharp pull under, pop back up, settle — the "something's on" tell. */
+  animation: pond-tug 0.55s cubic-bezier(0.3, 0.7, 0.3, 1) infinite;
+}
+.pond-ripple {
+  position: absolute;
+  width: 30px;
+  height: 12px; /* ellipse: water seen at an angle */
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.4);
+  animation: pond-ripple 0.8s ease-out infinite;
+  pointer-events: none;
+}
+.pond-ripple--2 {
+  animation-delay: 0.28s;
+}
+.pond-ripple--idle {
+  /* Slow, faint rings while the bobber just sits there. */
+  border-color: rgba(255, 255, 255, 0.3);
+  animation-duration: 3.2s;
+}
+@keyframes pond-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+@keyframes pond-tug {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  22% {
+    transform: translateY(10px) rotate(-9deg);
+  }
+  50% {
+    transform: translateY(1px) rotate(7deg);
+  }
+  75% {
+    transform: translateY(6px) rotate(-4deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+@keyframes pond-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.6);
+    opacity: 0;
+  }
+}
+
+/* POND.EXE — casting arc, splash, swim-off, catch-card effects. */
+.pond-cast {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(#d33 0 50%, #fff 50% 100%);
+  border: 2px solid #3b3b36;
+  animation: pond-cast 0.55s cubic-bezier(0.25, 0.6, 0.35, 1) forwards;
+  pointer-events: none;
+}
+@keyframes pond-cast {
+  0% {
+    left: 96%;
+    top: 2%;
+    transform: scale(0.6) rotate(0deg);
+  }
+  55% {
+    left: 66%;
+    top: -6%;
+    transform: scale(1) rotate(180deg);
+  }
+  100% {
+    left: 46%;
+    top: 38%;
+    transform: scale(1) rotate(360deg);
+  }
+}
+.pond-splash {
+  /* One bright ring when the bobber lands, then gone. */
+  border-color: rgba(255, 255, 255, 0.85);
+  animation: pond-ripple 0.7s ease-out 1 forwards;
+}
+.pond-swim-off {
+  animation: pond-swim-off 1s cubic-bezier(0.4, 0, 0.9, 0.6) forwards;
+  pointer-events: none;
+}
+@keyframes pond-swim-off {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  35% {
+    transform: translate(-30px, 6px) scale(0.85) rotate(-6deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(190px, 60px) scale(0.35) rotate(8deg);
+    opacity: 0;
+  }
+}
+.pond-card {
+  animation: pond-card-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes pond-card-in {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.pond-sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg) scale(0);
+  animation: pond-sparkle 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes pond-sparkle {
+  0%,
+  100% {
+    transform: rotate(45deg) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(45deg) scale(1);
+    opacity: 1;
+  }
+}
+.pond-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgba(255, 236, 150, 0.55) 50%,
+    transparent 60%
+  );
+  background-size: 250% 100%;
+  animation: pond-shimmer 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes pond-shimmer {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -20% 0;
+  }
+}
+
+/* POND.EXE — line-tension gauge strain (out of the safe window). */
+.pond-gauge--strain {
+  animation: pond-strain 0.12s linear infinite;
+}
+@keyframes pond-strain {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-1px);
+  }
+  75% {
+    transform: translateX(1px);
+  }
+}
+
+/* POND.EXE — per-spot atmosphere motes (CSS only). */
+.pond-mote {
+  position: absolute;
+  bottom: -6px;
+  border-radius: 1px;
+  opacity: 0;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+/* Lake: pollen drifting up and to the right. */
+.pond-mote--lake {
+  background: #f2e28a;
+  animation-name: pond-mote-rise;
+}
+/* Sewer: drips falling from the ceiling (tall thin motes). */
+.pond-mote--sewer {
+  top: -12px;
+  bottom: auto;
+  background: rgba(190, 220, 140, 0.8);
+  animation-name: pond-mote-fall;
+}
+/* The Cloud: data bits rising straight up. */
+.pond-mote--cloud {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 4px rgba(120, 200, 255, 0.9);
+  animation-name: pond-mote-rise-straight;
+}
+/* Abyss: deleted debris sinking slowly, faintly glowing. */
+.pond-mote--abyss {
+  top: -8px;
+  bottom: auto;
+  background: rgba(190, 150, 255, 0.55);
+  box-shadow: 0 0 5px rgba(150, 90, 255, 0.5);
+  animation-name: pond-mote-sink;
+}
+@keyframes pond-mote-rise {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.85;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(40px, -320px);
+    opacity: 0;
+  }
+}
+@keyframes pond-mote-rise-straight {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-320px);
+    opacity: 0;
+  }
+}
+@keyframes pond-mote-fall {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(240px);
+    opacity: 0;
+  }
+}
+@keyframes pond-mote-sink {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-18px, 260px) rotate(120deg);
+    opacity: 0;
+  }
+}

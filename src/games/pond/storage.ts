@@ -39,6 +39,8 @@ export interface PondState {
   activeBait: BaitId;
   /** Remaining casts per purchased bait. */
   baits: Record<Exclude<BaitId, "bare">, number>;
+  /** Opt-in synthesized sound (muted by default). */
+  sound: boolean;
 }
 
 export function emptyPondState(): PondState {
@@ -49,6 +51,7 @@ export function emptyPondState(): PondState {
     spot: "lake",
     activeBait: "bare",
     baits: { worm: 0, floppy: 0, ram: 0 },
+    sound: false,
   };
 }
 
@@ -66,6 +69,7 @@ export function loadPondState(): PondState {
       spot: parsed.spot ?? base.spot,
       activeBait: parsed.activeBait ?? base.activeBait,
       baits: { ...base.baits, ...parsed.baits },
+      sound: parsed.sound === true,
     };
   } catch {
     return emptyPondState();

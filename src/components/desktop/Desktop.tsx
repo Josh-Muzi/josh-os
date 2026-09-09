@@ -14,6 +14,7 @@ import {
   useWindows,
   WindowsProvider,
 } from "./WindowManager";
+import wallpaper from "./wallpaper.jpg";
 
 interface DesktopProps {
   onSwitchToPlain: () => void;
@@ -24,12 +25,37 @@ function compostHome() {
   return { x: window.innerWidth - 104, y: window.innerHeight - 192 };
 }
 
-/** Home position for each icon; state resets here on every page load. */
-function iconHome(app: AppDefinition, index: number) {
-  if (app.id === "compost" && typeof window !== "undefined") {
-    return compostHome();
+const ICON_TOP = 16;
+const ICON_STEP_Y = 92;
+const ICON_STEP_X = 96;
+const TASKBAR_H = 48;
+/** SSR-safe default; the mount effect re-homes with the real height. */
+const DEFAULT_ROWS = 6;
+
+/** How many icons fit in one column above the taskbar. */
+function rowsPerColumn() {
+  if (typeof window === "undefined") return DEFAULT_ROWS;
+  const usable = window.innerHeight - TASKBAR_H - ICON_TOP - 12;
+  return Math.max(1, Math.floor(usable / ICON_STEP_Y));
+}
+
+/**
+ * Home position for each icon. Column icons wrap into a new column
+ * before they'd collide with the taskbar; the Compost Bin doesn't
+ * occupy a column slot (it lives bottom-right).
+ */
+function iconHome(app: AppDefinition, rows = rowsPerColumn(), ssr = false) {
+  if (app.id === "compost") {
+    return ssr || typeof window === "undefined"
+      ? { x: 16, y: 16 }
+      : compostHome();
   }
-  return { x: 16, y: 16 + index * 92 };
+  const slot = APPS.filter((a) => a.id !== "compost").findIndex(
+    (a) => a.id === app.id,
+  );
+  const col = Math.floor(slot / rows);
+  const row = slot % rows;
+  return { x: 16 + col * ICON_STEP_X, y: ICON_TOP + row * ICON_STEP_Y };
 }
 
 export function Desktop({ onSwitchToPlain }: DesktopProps) {
@@ -46,8 +72,10 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [iconPositions, setIconPositions] = useState(() =>
+    // Deterministic on server and first client render (no window
+    // access) so hydration matches; the effect below re-homes.
     Object.fromEntries(
-      APPS.map((app, index) => [app.id, iconHome(app, index)]),
+      APPS.map((app) => [app.id, iconHome(app, DEFAULT_ROWS, true)]),
     ),
   );
   // Distinguishes a real drag from a click so dragging never opens a window.
@@ -63,16 +91,24 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
     return () => query.removeEventListener("change", update);
   }, []);
 
+  // Re-home every icon the user hasn't moved, on mount (real viewport
+  // height) and whenever the window resizes.
   useEffect(() => {
-    const onResize = () => {
-      if (userMoved.current.has("compost")) return;
-      setIconPositions((positions) => ({
-        ...positions,
-        compost: compostHome(),
-      }));
+    const rehome = () => {
+      const rows = rowsPerColumn();
+      setIconPositions((positions) => {
+        const next = { ...positions };
+        for (const app of APPS) {
+          if (!userMoved.current.has(app.id)) {
+            next[app.id] = iconHome(app, rows);
+          }
+        }
+        return next;
+      });
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    rehome();
+    window.addEventListener("resize", rehome);
+    return () => window.removeEventListener("resize", rehome);
   }, []);
 
   const top = topZ(windows);
@@ -89,7 +125,9 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
     <div
       className="relative h-dvh overflow-hidden select-none"
       style={{
-        background: "linear-gradient(180deg, #ACC99C 0%, #9CBF87 100%)",
+        // Meadow diorama wallpaper (Josh's generated art); the gradient
+        // remains beneath as a fallback while the image loads.
+        background: `url(${wallpaper.src}) center / cover no-repeat, linear-gradient(180deg, #ACC99C 0%, #9CBF87 100%)`,
       }}
     >
       {isMobile ? (
@@ -99,12 +137,12 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
           ))}
         </div>
       ) : (
-        APPS.map((app, index) => (
+        APPS.map((app) => (
           <Rnd
             key={app.id}
             bounds="parent"
             enableResizing={false}
-            position={iconPositions[app.id] ?? iconHome(app, index)}
+            position={iconPositions[app.id] ?? iconHome(app)}
             // Icon layer: z=5, always under windows (WINDOW_LAYER_BASE=10).
             style={{ zIndex: 5 }}
             onDragStart={(_event, data) => {

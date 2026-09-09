@@ -10,26 +10,26 @@ interface TaskbarProps {
   onToggleMenu: () => void;
 }
 
-/** Modern taskbar: frosted full-width bar — menu, window pills, clock. */
+/** Modern taskbar: frosted dark glass over the wallpaper — menu, window pills, clock. */
 export function Taskbar({ menuOpen, onToggleMenu }: TaskbarProps) {
   const { windows } = useWindows();
   const { focus, minimize } = useWindowActions();
   const top = topZ(windows);
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-[9000] flex h-12 items-center gap-1.5 border-t border-black/10 bg-white/80 px-2 backdrop-blur">
+    <div className="absolute inset-x-0 bottom-0 z-[9000] flex h-12 items-center gap-1.5 border-t border-white/15 bg-[#1c2618]/55 px-2 text-white backdrop-blur-md">
       <button
         type="button"
         aria-label="Open JoshOS menu"
         aria-expanded={menuOpen}
         onClick={onToggleMenu}
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-          menuOpen ? "bg-neutral-100" : "hover:bg-neutral-100"
+          menuOpen ? "bg-white/25" : "hover:bg-white/15"
         }`}
       >
         <SproutIcon size={18} />
       </button>
-      <div aria-hidden className="mx-0.5 h-6 w-px shrink-0 bg-neutral-200" />
+      <div aria-hidden className="mx-0.5 h-6 w-px shrink-0 bg-white/20" />
       <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
         {windows.map((win) => {
           const app = APPS.find((a) => a.id === win.appId);
@@ -44,8 +44,8 @@ export function Taskbar({ menuOpen, onToggleMenu }: TaskbarProps) {
               onClick={() => (isTop ? minimize(win.appId) : focus(win.appId))}
               className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm ${
                 isTop
-                  ? "bg-neutral-100 font-medium text-neutral-900"
-                  : "text-neutral-600 hover:bg-neutral-50"
+                  ? "bg-white/25 font-medium text-white"
+                  : "text-white/80 hover:bg-white/15"
               }`}
             >
               <Icon size={16} />
@@ -68,7 +68,7 @@ function Clock() {
     return () => window.clearInterval(id);
   }, []);
   return (
-    <span className="shrink-0 px-2 text-sm text-neutral-600 tabular-nums">
+    <span className="shrink-0 px-2 text-sm text-white/85 tabular-nums">
       {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
     </span>
   );

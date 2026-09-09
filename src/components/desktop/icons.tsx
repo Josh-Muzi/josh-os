@@ -223,3 +223,34 @@ const POND: readonly Px[] = [
 export function PondIcon({ size }: PixelIconProps) {
   return <PixelSvg size={size} rects={POND} />;
 }
+
+const DERBY: readonly Px[] = [
+  // Two racer critters on a track, checkered finish on the right.
+  [1, 4, 4, 3, NAVY], // racer 1 body
+  [4, 3, 1, 1, NAVY],
+  [4, 5, 1, 1, PAPER], // eye
+  [1, 7, 1, 1, INK], // legs
+  [3, 7, 1, 1, INK],
+  [3, 9, 4, 3, GOLD_SHADE], // racer 2 body
+  [6, 8, 1, 1, GOLD_SHADE],
+  [6, 10, 1, 1, PAPER],
+  [3, 12, 1, 1, INK],
+  [5, 12, 1, 1, INK],
+  [0, 13, 16, 3, BROWN], // track
+  [0, 13, 16, 1, BROWN_LIGHT],
+  // Checkered finish column.
+  [12, 2, 1, 1, INK],
+  [13, 3, 1, 1, INK],
+  [12, 4, 1, 1, INK],
+  [13, 5, 1, 1, INK],
+  [12, 6, 1, 1, INK],
+  [13, 7, 1, 1, INK],
+  [12, 8, 1, 1, INK],
+  [13, 9, 1, 1, INK],
+  [12, 10, 1, 1, INK],
+  [13, 11, 1, 1, INK],
+];
+
+export function DerbyIcon({ size }: PixelIconProps) {
+  return <PixelSvg size={size} rects={DERBY} />;
+}

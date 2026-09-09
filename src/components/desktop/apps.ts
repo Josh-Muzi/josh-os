@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import {
   BriefcaseIcon,
   CompostBinIcon,
+  DerbyIcon,
   FolderIcon,
   MailIcon,
   NotepadIcon,
@@ -19,7 +20,8 @@ export type AppId =
   | "resume"
   | "contact"
   | "compost"
-  | "pond";
+  | "pond"
+  | "derby";
 
 export interface AppDefinition {
   id: AppId;
@@ -90,5 +92,12 @@ export const APPS: AppDefinition[] = [
     label: "POND.EXE",
     icon: PondIcon,
     defaultSize: { width: 560, height: 560 },
+  },
+  {
+    id: "derby",
+    title: "DERBY.EXE",
+    label: "DERBY.EXE",
+    icon: DerbyIcon,
+    defaultSize: { width: 720, height: 720 },
   },
 ];

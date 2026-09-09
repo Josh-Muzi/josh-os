@@ -29,14 +29,20 @@ async function callHaiku(
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
+    const headers: Record<string, string> = {
+      "content-type": "application/json",
+      "x-api-key": process.env.ANTHROPIC_API_KEY ?? "",
+      "anthropic-version": ANTHROPIC_VERSION,
+    };
+    // Identity-linked API keys must declare the workspace they act in.
+    // Workspace-scoped keys don't need this; harmless when unset.
+    if (process.env.ANTHROPIC_WORKSPACE_ID) {
+      headers["anthropic-workspace-id"] = process.env.ANTHROPIC_WORKSPACE_ID;
+    }
     const response = await fetch(API_URL, {
       method: "POST",
       signal: controller.signal,
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY ?? "",
-        "anthropic-version": ANTHROPIC_VERSION,
-      },
+      headers,
       body: JSON.stringify({
         model: HAIKU_MODEL,
         max_tokens: maxTokens,
@@ -46,7 +52,9 @@ async function callHaiku(
       }),
     });
     if (!response.ok) {
-      throw new Error(`Anthropic API ${response.status}`);
+      // Surface the API's own explanation — status alone hides the cause.
+      const detail = (await response.text().catch(() => "")).slice(0, 300);
+      throw new Error(`Anthropic API ${response.status}: ${detail}`);
     }
     const data = (await response.json()) as {
       content?: Array<{ type: string; text?: string }>;

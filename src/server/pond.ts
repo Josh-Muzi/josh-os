@@ -42,7 +42,7 @@ function msUntilNextUtcMidnight(): number {
 export async function getDailyWeather(): Promise<PondWeather> {
   const day = new Date().toISOString().slice(0, 10);
   const key = `pond:weather:${day}`;
-  const cached = cacheGet<PondWeather>(key);
+  const cached = await cacheGet<PondWeather>(key);
   if (cached) return cached;
   try {
     const weather = await generateJson(
@@ -58,10 +58,10 @@ export async function getDailyWeather(): Promise<PondWeather> {
       WeatherSchema,
       150,
     );
-    cacheSet(key, weather, msUntilNextUtcMidnight());
+    await cacheSet(key, weather, msUntilNextUtcMidnight());
     return weather;
   } catch {
-    cacheSet(key, FALLBACK_WEATHER, msUntilNextUtcMidnight());
+    await cacheSet(key, FALLBACK_WEATHER, msUntilNextUtcMidnight());
     return FALLBACK_WEATHER;
   }
 }
@@ -114,7 +114,7 @@ export async function generateFishIdentity(
   req: CatchRequest,
 ): Promise<FishIdentity> {
   const key = speciesKey(req.spot, req.rarity);
-  const pool = cacheGet<SpeciesCacheEntry>(key) ?? { species: [] };
+  const pool = (await cacheGet<SpeciesCacheEntry>(key)) ?? { species: [] };
   const canReuse = req.rarity === "common" || req.rarity === "uncommon";
   if (
     canReuse &&
@@ -162,6 +162,6 @@ export async function generateFishIdentity(
 
   pool.species.push(identity);
   if (pool.species.length > SPECIES_CAP) pool.species.shift();
-  cacheSet(key, pool);
+  await cacheSet(key, pool);
   return identity;
 }

@@ -97,11 +97,40 @@ export async function generateJson<T>(
   const parsed = schema.safeParse(safeJson(extractJson(first)));
   if (parsed.success) return parsed.data;
 
-  const retryPrompt = `${userPrompt}\n\nYour previous reply was invalid: ${parsed.error.message.slice(0, 300)}\nReply again with ONLY the corrected JSON object.`;
+  const retryPrompt = `${userPrompt}\n\nYour previous reply was invalid: ${issueSummary(parsed.error)}\nReply again with ONLY the corrected JSON object.`;
   const second = await callHaiku(system, retryPrompt, maxTokens);
   const reparsed = schema.safeParse(safeJson(extractJson(second)));
   if (reparsed.success) return reparsed.data;
-  throw new Error("Model output failed validation twice");
+  // Diagnosable failure: which fields, and what the model actually sent.
+  throw new Error(
+    `Model output failed validation twice: ${issueSummary(reparsed.error)} | raw: ${second.slice(0, 240).replace(/\s+/g, " ")}`,
+  );
+}
+
+/** Compact "path: message" list from a Zod error (first few issues). */
+function issueSummary(error: z.ZodError): string {
+  return error.issues
+    .slice(0, 4)
+    .map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`)
+    .join("; ");
+}
+
+/**
+ * Clip text to `max` chars at a word boundary. Used by schemas as a
+ * transform so a slightly-too-long line is trimmed, not rejected —
+ * rejecting a whole generation over 3 extra characters is the wrong
+ * trade (it silently pushed DERBY into fallback names).
+ */
+export function clipText(text: string, max: number): string {
+  const trimmed = text.trim();
+  if (trimmed.length <= max) return trimmed;
+  const cut = trimmed.slice(0, max - 1);
+  const space = cut.lastIndexOf(" ");
+  const base = (space > max * 0.6 ? cut.slice(0, space) : cut).replace(
+    /[,;:\-–—\s]+$/,
+    "",
+  );
+  return `${base}…`;
 }
 
 function safeJson(text: string): unknown {

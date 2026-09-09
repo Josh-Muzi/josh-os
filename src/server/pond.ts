@@ -4,7 +4,7 @@
  * so no user text ever reaches a prompt.
  */
 import { z } from "zod";
-import { generateJson } from "./anthropic";
+import { clipText, generateJson } from "./anthropic";
 import { cacheGet, cacheSet } from "./cache";
 
 export const POND_SPOTS = ["lake", "sewer", "cloud", "abyss"] as const;
@@ -66,10 +66,18 @@ export async function getDailyWeather(): Promise<PondWeather> {
   }
 }
 
+// Tolerant: clip over-long text at a word boundary and normalize the
+// hue instead of rejecting the whole fish over a few characters.
 const FishIdentitySchema = z.object({
-  name: z.string().min(2).max(32),
-  flavor: z.string().min(3).max(110),
-  hue: z.number().int().min(0).max(359),
+  name: z
+    .string()
+    .min(2)
+    .transform((s) => clipText(s, 32)),
+  flavor: z
+    .string()
+    .min(3)
+    .transform((s) => clipText(s, 110)),
+  hue: z.number().transform((h) => ((Math.round(h) % 360) + 360) % 360),
 });
 export type FishIdentity = z.infer<typeof FishIdentitySchema>;
 

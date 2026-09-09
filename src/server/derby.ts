@@ -13,7 +13,7 @@ import { simulateRace, TICKS_PER_SECOND } from "@/games/derby/sim";
 import { TRAIT_IDS, TRAITS } from "@/games/derby/traits";
 import type { RaceCard } from "@/games/derby/types";
 import { createRng } from "@/games/pond/sprite/rng";
-import { generateJson } from "./anthropic";
+import { clipText, generateJson } from "./anthropic";
 
 export interface CommentaryBeat {
   atSec: number;
@@ -39,16 +39,26 @@ function rollMechanics(seed: string) {
   }));
 }
 
+// Tolerant by design: over-long text is CLIPPED (word boundary), an
+// extra racer is dropped, and only genuinely broken output (missing
+// racers, empty names, duplicates) triggers the retry/fallback path.
 const IdentitySchema = z
   .object({
     racers: z
       .array(
         z.object({
-          name: z.string().min(2).max(24),
-          gimmick: z.string().min(3).max(60),
+          name: z
+            .string()
+            .min(2)
+            .transform((s) => clipText(s, 24)),
+          gimmick: z
+            .string()
+            .min(3)
+            .transform((s) => clipText(s, 60)),
         }),
       )
-      .length(6),
+      .min(6)
+      .transform((racers) => racers.slice(0, 6)),
   })
   .refine(
     (value) =>
@@ -114,12 +124,16 @@ const CommentarySchema = z.object({
   beats: z
     .array(
       z.object({
-        atSec: z.number().min(0).max(60),
-        text: z.string().min(3).max(90),
+        // Clamp rather than reject: a beat at "-1" or "75" still has a line.
+        atSec: z.number().transform((n) => Math.min(60, Math.max(0, n))),
+        text: z
+          .string()
+          .min(3)
+          .transform((s) => clipText(s, 90)),
       }),
     )
-    .min(4)
-    .max(10),
+    .min(3)
+    .transform((beats) => beats.slice(0, 10)),
 });
 
 const COMMENTARY_SYSTEM = [

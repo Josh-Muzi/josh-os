@@ -40,9 +40,10 @@ function rowsPerColumn() {
 }
 
 /**
- * Home position for each icon. Column icons wrap into a new column
- * before they'd collide with the taskbar; the Compost Bin doesn't
- * occupy a column slot (it lives bottom-right).
+ * Home position for each icon. Apps declare a desktop column (0 =
+ * portfolio, 1 = games, right of About Me); within a column, icons
+ * stack top-down and wrap before they'd collide with the taskbar.
+ * The Compost Bin lives bottom-right and takes no column slot.
  */
 function iconHome(app: AppDefinition, rows = rowsPerColumn(), ssr = false) {
   if (app.id === "compost") {
@@ -50,10 +51,13 @@ function iconHome(app: AppDefinition, rows = rowsPerColumn(), ssr = false) {
       ? { x: 16, y: 16 }
       : compostHome();
   }
-  const slot = APPS.filter((a) => a.id !== "compost").findIndex(
-    (a) => a.id === app.id,
+  const column = app.desktopColumn ?? 0;
+  const siblings = APPS.filter(
+    (a) => a.id !== "compost" && (a.desktopColumn ?? 0) === column,
   );
-  const col = Math.floor(slot / rows);
+  const slot = siblings.findIndex((a) => a.id === app.id);
+  // Overflow within a declared column wraps to the next column over.
+  const col = column + Math.floor(slot / rows);
   const row = slot % rows;
   return { x: 16 + col * ICON_STEP_X, y: ICON_TOP + row * ICON_STEP_Y };
 }

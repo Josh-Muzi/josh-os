@@ -2,8 +2,11 @@
  * JoshOS pixel icon set — hand-drawn 16x16 SVGs, no icon library.
  * Consistency rules: one grid, shared palette below, ink outlines,
  * highlights top-left, shadows bottom-right, garden green accents
- * only where they earn their place.
+ * only where they earn their place. The two game icons are generated
+ * pixel art (128x128 PNGs) rendered through the same size contract.
  */
+import iconDerby from "./icon-derby.png";
+import iconPond from "./icon-pond.png";
 
 type Px = readonly [number, number, number, number, string];
 
@@ -200,57 +203,33 @@ export function CompostBinIcon({ size }: PixelIconProps) {
   return <PixelSvg size={size} rects={COMPOST} />;
 }
 
-const POND: readonly Px[] = [
-  // Fish over water: green body, ink outline hints, navy waves.
-  [3, 4, 2, 1, GREEN_DARK], // tail top
-  [2, 5, 2, 3, GREEN_DARK], // tail
-  [3, 8, 2, 1, GREEN_DARK], // tail bottom
-  [6, 3, 3, 1, GREEN_DARK], // dorsal
-  [4, 4, 8, 1, GREEN],
-  [4, 5, 9, 3, GREEN],
-  [4, 8, 8, 1, GREEN],
-  [5, 8, 6, 1, PAPER_SHADE], // belly
-  [10, 5, 2, 2, PAPER], // eye white
-  [11, 6, 1, 1, INK], // pupil
-  [13, 6, 1, 1, INK], // mouth
-  [0, 11, 16, 5, NAVY], // water
-  [1, 11, 3, 1, PAPER], // foam
-  [7, 12, 3, 1, PAPER_SHADE],
-  [12, 11, 2, 1, PAPER],
-  [3, 14, 2, 1, PAPER_SHADE],
-];
-
-export function PondIcon({ size }: PixelIconProps) {
-  return <PixelSvg size={size} rects={POND} />;
+/** Generated game icons (128x128 PNGs, shown at 32px = crisp 4x). */
+function PngIcon({
+  src,
+  size = 32,
+  alt,
+}: {
+  src: string;
+  size?: number;
+  alt: string;
+}) {
+  return (
+    // biome-ignore lint/performance/noImgElement: tiny static asset, no optimization needed
+    <img
+      src={src}
+      width={size}
+      height={size}
+      alt={alt}
+      draggable={false}
+      style={{ display: "block" }}
+    />
+  );
 }
 
-const DERBY: readonly Px[] = [
-  // Two racer critters on a track, checkered finish on the right.
-  [1, 4, 4, 3, NAVY], // racer 1 body
-  [4, 3, 1, 1, NAVY],
-  [4, 5, 1, 1, PAPER], // eye
-  [1, 7, 1, 1, INK], // legs
-  [3, 7, 1, 1, INK],
-  [3, 9, 4, 3, GOLD_SHADE], // racer 2 body
-  [6, 8, 1, 1, GOLD_SHADE],
-  [6, 10, 1, 1, PAPER],
-  [3, 12, 1, 1, INK],
-  [5, 12, 1, 1, INK],
-  [0, 13, 16, 3, BROWN], // track
-  [0, 13, 16, 1, BROWN_LIGHT],
-  // Checkered finish column.
-  [12, 2, 1, 1, INK],
-  [13, 3, 1, 1, INK],
-  [12, 4, 1, 1, INK],
-  [13, 5, 1, 1, INK],
-  [12, 6, 1, 1, INK],
-  [13, 7, 1, 1, INK],
-  [12, 8, 1, 1, INK],
-  [13, 9, 1, 1, INK],
-  [12, 10, 1, 1, INK],
-  [13, 11, 1, 1, INK],
-];
+export function PondIcon({ size }: PixelIconProps) {
+  return <PngIcon src={iconPond.src} size={size} alt="" />;
+}
 
 export function DerbyIcon({ size }: PixelIconProps) {
-  return <PixelSvg size={size} rects={DERBY} />;
+  return <PngIcon src={iconDerby.src} size={size} alt="" />;
 }

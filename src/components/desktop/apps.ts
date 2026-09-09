@@ -33,6 +33,8 @@ export interface AppDefinition {
   defaultSize: { width: number; height: number };
   /** Defaults to true; the Compost Bin lives on the desktop only. */
   inStartMenu?: boolean;
+  /** Desktop icon column (0 = portfolio, 1 = games). Defaults to 0. */
+  desktopColumn?: number;
 }
 
 export const APPS: AppDefinition[] = [
@@ -92,6 +94,7 @@ export const APPS: AppDefinition[] = [
     label: "POND.EXE",
     icon: PondIcon,
     defaultSize: { width: 560, height: 560 },
+    desktopColumn: 1,
   },
   {
     id: "derby",
@@ -99,5 +102,6 @@ export const APPS: AppDefinition[] = [
     label: "DERBY.EXE",
     icon: DerbyIcon,
     defaultSize: { width: 720, height: 720 },
+    desktopColumn: 1,
   },
 ];

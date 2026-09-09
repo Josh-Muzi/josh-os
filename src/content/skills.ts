@@ -25,6 +25,28 @@ export const skills: SkillGroup[] = [
       "MongoDB",
       "OAuth 2.0 and auth integration",
       "Webhooks",
+      "Redis (Upstash)",
+      "Rate limiting and budget controls",
+    ],
+  },
+  {
+    label: "AI Engineering",
+    items: [
+      "Claude API (Anthropic)",
+      "Prompt design with schema-validated (Zod) outputs",
+      "Hybrid architectures: rules in code, LLM for creativity",
+      "Graceful degradation and cost guardrails",
+      "AI-assisted asset pipelines (pixel art, sprite sheets)",
+    ],
+  },
+  {
+    label: "Game & Simulation",
+    items: [
+      "Deterministic seeded simulation",
+      "Monte Carlo odds pricing",
+      "Procedural sprite generation",
+      "Canvas rendering and CSS animation",
+      "Game economy design",
     ],
   },
   {

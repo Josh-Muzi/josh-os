@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://josh-os.vercel.app"),
   title: "Josh Muzi — Software Engineer",
   description:
-    "Software engineer in Orange County building web apps with TypeScript, React, and Next.js. Currently at REFS Labs.",
+    "Software engineer in Orange County building web apps with TypeScript, React, and Next.js — plus AI-powered games you can play right on the desktop.",
   openGraph: {
     title: "Josh Muzi — Software Engineer",
     description:

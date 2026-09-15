@@ -4,7 +4,7 @@ import { linkClasses } from "./Panel";
 export function ContactWindow() {
   return (
     <div className="space-y-2">
-      <p>Say hi — I read everything:</p>
+      <p>Feel free to reach out, I'd love to connect:</p>
       <ul className="space-y-1.5">
         {contactLinks.map((link) => (
           <li key={link.href} className="flex items-baseline gap-2">

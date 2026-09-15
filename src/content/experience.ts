@@ -6,7 +6,7 @@ export const experience: ExperienceEntry[] = [
     companyUrl: "https://refs.me",
     role: "Software Engineer Intern",
     start: "Jan 2026",
-    end: null,
+    end: "Sept 2026",
     location: "Remote",
     summary: "Trust-and-reputation platform for the trading card community.",
     highlights: [

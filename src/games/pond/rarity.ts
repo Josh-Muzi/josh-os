@@ -72,30 +72,32 @@ export function zoneCenterAt(rarity: Rarity, t: number, seed: number): number {
     case "common":
       return 0.5 + 0.22 * Math.sin(t * 0.9 + s);
     case "uncommon":
-      return 0.5 + 0.28 * Math.sin(t * 1.6 + s) * Math.cos(t * 0.7);
+      return 0.5 + 0.28 * Math.sin(t * 1.4 + s) * Math.cos(t * 0.7);
     case "rare":
+      // Eased 2026-09-14: smaller swing, gentler jitter (was 0.3/2.6 + 0.12/6.3).
       return (
-        0.5 + 0.3 * Math.sin(t * 2.6 + s) + 0.12 * Math.sin(t * 6.3 + s * 2)
+        0.5 + 0.26 * Math.sin(t * 2.1 + s) + 0.08 * Math.sin(t * 4.8 + s * 2)
       );
     case "legendary": {
-      // Darting: smooth base + step jumps every ~1.2s.
-      const dart = Math.sin(Math.floor(t / 1.2) * 7.31 + s) * 0.32;
+      // Darting: smooth base + step jumps every ~1.4s.
+      const dart = Math.sin(Math.floor(t / 1.4) * 7.31 + s) * 0.28;
       return 0.5 + 0.2 * Math.sin(t * 3.1 + s) + dart;
     }
     case "anomaly": {
-      // Wrong on purpose: fast jitter + jumps twice as often.
-      const glitch = Math.sin(Math.floor(t / 0.6) * 11.7 + s) * 0.34;
+      // Wrong on purpose: fast jitter + frequent jumps.
+      const glitch = Math.sin(Math.floor(t / 0.7) * 11.7 + s) * 0.3;
       return 0.5 + 0.16 * Math.sin(t * 5.2 + s * 3) + glitch;
     }
   }
 }
 
+/** Safe-window widths (eased 2026-09-14; previously .30/.26/.22/.18/.16). */
 export const ZONE_WIDTH: Record<Rarity, number> = {
-  common: 0.3,
-  uncommon: 0.26,
-  rare: 0.22,
-  legendary: 0.18,
-  anomaly: 0.16,
+  common: 0.34,
+  uncommon: 0.3,
+  rare: 0.27,
+  legendary: 0.22,
+  anomaly: 0.19,
 };
 
 export const REEL_SECONDS = 5;

@@ -36,7 +36,7 @@ import { SHARK_BAILOUT, SHARK_THRESHOLD, VincentDialog } from "./Vincent";
 
 type UiPhase = "loading" | "betting" | "racing" | "results";
 
-const NEXT_RACE_BUFFER_SEC = 10;
+const NEXT_RACE_BUFFER_SEC = 5;
 /** Minimum spacing between announcer lines (ms). */
 const TICKER_GAP_MS = 1100;
 

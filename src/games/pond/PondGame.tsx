@@ -322,8 +322,10 @@ export function PondGame() {
       reel.elapsed += dt;
 
       // Needle physics: hold to rise, release to sink. Forgiving damping.
-      const accel = holdingRef.current ? 2.6 : -2.6;
-      reel.velocity = (reel.velocity + accel * dt) * 0.92;
+      // Eased 2026-09-14: stronger accel + tighter damping = the needle
+      // answers faster and overshoots less, so a moving zone is keepable.
+      const accel = holdingRef.current ? 3.2 : -3.2;
+      reel.velocity = (reel.velocity + accel * dt) * 0.88;
       reel.needle = Math.min(
         1,
         Math.max(0, reel.needle + reel.velocity * dt * 3),
@@ -342,7 +344,9 @@ export function PondGame() {
       reel.ticksTotal += 1;
       if (inZone) reel.ticksInZone += 1;
       // Progress climbs in-zone, drains gently outside, never below floor.
-      reel.progress += inZone ? dt / (REEL_SECONDS * 0.72) : -dt * 0.05;
+      // Eased 2026-09-14: ~3.1s of in-zone time lands it (was 3.6s), and
+      // slipping out costs less (0.035/s, was 0.05/s).
+      reel.progress += inZone ? dt / (REEL_SECONDS * 0.62) : -dt * 0.035;
       reel.progress = Math.max(0.05, reel.progress);
 
       setNeedle(reel.needle);
@@ -602,8 +606,29 @@ export function PondGame() {
                   );
                 })}
               </div>
-              {/* Scene: each spot has its own light */}
+              {/* Scene: each spot has its own light. The water itself is
+                  a control — press/hold it exactly like the action button
+                  (cast, hook, hold-to-reel, cast again). Presses that land
+                  on a real button inside the scene (e.g. Share catch) are
+                  left alone. */}
+              {/* biome-ignore lint/a11y/noStaticElementInteractions: the keyboard path is SPACE + the labelled action button below */}
               <div
+                onContextMenu={(e) => e.preventDefault()}
+                onPointerDown={(e) => {
+                  if ((e.target as HTMLElement).closest("button")) return;
+                  e.preventDefault();
+                  actionDown();
+                }}
+                onPointerUp={() => {
+                  holdingRef.current = false;
+                }}
+                onPointerLeave={() => {
+                  holdingRef.current = false;
+                }}
+                onPointerCancel={() => {
+                  holdingRef.current = false;
+                }}
+                title={ACTION_LABEL[phase]}
                 style={{
                   position: "relative",
                   flex: 1,
@@ -613,6 +638,8 @@ export function PondGame() {
                   background: spotConfig(pond.spot).scene.background,
                   // Generated scene art is JPEG scaled to ~1/3: smooth
                   // sampling (not pixelated) avoids compression speckle.
+                  cursor: phase === "waiting" ? "default" : "pointer",
+                  touchAction: "none",
                 }}
               >
                 {/* Atmosphere: pollen, drips, data bits, sinking debris */}
@@ -1225,7 +1252,9 @@ export function PondGame() {
               <div
                 style={{ display: "flex", alignItems: "center", fontSize: 12 }}
               >
-                <span>Tip: pressing SPACE presses the button.</span>
+                <span>
+                  Tip: click the water, press SPACE, or use the button.
+                </span>
                 <span style={{ marginLeft: "auto" }}>
                   J${balance.toLocaleString()} | Casts: {pond.records.casts} |
                   Catches: {pond.records.catches}

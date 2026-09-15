@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  // CONFIRM at deploy: assumes the Vercel project is named josh-os.
-  metadataBase: new URL("https://josh-os.vercel.app"),
+  // Canonical origin for share previews and absolute URLs.
+  metadataBase: new URL("https://joshmuzi.com"),
   title: "Josh Muzi — Software Engineer",
   description:
     "Software engineer in Orange County building web apps with TypeScript, React, and Next.js — plus AI-powered games you can play right on the desktop.",

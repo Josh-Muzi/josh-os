@@ -7,6 +7,11 @@ export const contactLinks: ContactLink[] = [
     href: "mailto:jmuzi04@gmail.com",
   },
   {
+    label: "Phone",
+    value: "949-466-3588",
+    href: "tel:+19494663588",
+  },
+  {
     label: "GitHub",
     value: "github.com/Josh-Muzi",
     href: "https://github.com/Josh-Muzi",

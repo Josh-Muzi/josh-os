@@ -4,11 +4,12 @@ export const experience: ExperienceEntry[] = [
   {
     company: "REFS Labs",
     companyUrl: "https://refs.me",
-    role: "Software Engineer Intern",
+    role: "Software Engineer (Full Time)",
     start: "Jan 2026",
     end: "Sept 2026",
     location: "Remote",
-    summary: "Trust-and-reputation platform for the trading card community.",
+    summary:
+      "Full time engineer on a seven person team at an early stage startup building a trust-and-reputation platform for the trading card community.",
     highlights: [
       "Contributed across the full stack: frontend features, backend services, authentication flows, third-party integrations, and internal tooling.",
       "Diagnosed and resolved server-side performance issues by redesigning feature flag evaluation to eliminate redundant processing.",

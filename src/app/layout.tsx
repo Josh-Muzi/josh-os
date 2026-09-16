@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   // Canonical origin for share previews and absolute URLs.
   metadataBase: new URL("https://joshmuzi.com"),
-  title: "Josh Muzi — Software Engineer",
+  title: "Josh Muzi - Software Engineer",
   description:
     "Software engineer in Orange County building web apps with TypeScript, React, and Next.js — plus AI-powered games you can play right on the desktop.",
   openGraph: {
-    title: "Josh Muzi — Software Engineer",
+    title: "Josh Muzi - Software Engineer",
     description:
       "JoshOS: a Windows 95-style desktop that happens to be my portfolio.",
     siteName: "JoshOS",

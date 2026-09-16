@@ -7,8 +7,9 @@ A Windows 95-style desktop that happens to be my portfolio, with two AI-powered 
 Click around: desktop icons open draggable, resizable windows (About, Projects, Experience, Skills, Resume, Contact), plus **POND.EXE** and **DERBY.EXE**. Don't forget the Compost Bin.
 
 <p align="center">
-  <img src="src/games/derby/track.png" alt="DERBY.EXE track" width="640">
+  <img width="1916" height="942" alt="image" src="https://github.com/user-attachments/assets/a38c9369-8152-4047-b3f4-51cff8e8c19f" />
 </p>
+
 
 ## The games
 

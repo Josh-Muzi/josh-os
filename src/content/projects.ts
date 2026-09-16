@@ -17,7 +17,7 @@ export const projects: Project[] = [
       "react-rnd",
       "Vercel",
     ],
-    repoUrl: "https://github.com/TinyXIV/josh-os",
+    repoUrl: "https://github.com/Josh-Muzi/josh-os",
     status: "in-progress",
   },
   {
@@ -37,7 +37,7 @@ export const projects: Project[] = [
       "Canvas",
       "Upstash Redis",
     ],
-    repoUrl: "https://github.com/TinyXIV/josh-os/tree/main/src/games/pond",
+    repoUrl: "https://github.com/Josh-Muzi/josh-os/tree/main/src/games/pond",
     status: "live",
   },
   {
@@ -58,7 +58,7 @@ export const projects: Project[] = [
       "Canvas",
       "Upstash Redis",
     ],
-    repoUrl: "https://github.com/TinyXIV/josh-os/tree/main/src/games/derby",
+    repoUrl: "https://github.com/Josh-Muzi/josh-os/tree/main/src/games/derby",
     status: "live",
   },
 ];

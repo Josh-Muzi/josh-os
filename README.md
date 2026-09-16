@@ -82,4 +82,4 @@ No license is attached yet. You're welcome to read and learn from the code; plea
 
 ---
 
-Josh Muzi · [joshmuzi.com](https://joshmuzi.com) · [jmuzi04@gmail.com](mailto:jmuzi04@gmail.com) · [GitHub](https://github.com/TinyXIV) · [LinkedIn](https://www.linkedin.com/in/joshua-muzi-707386b2)
+Josh Muzi · [joshmuzi.com](https://joshmuzi.com) · [jmuzi04@gmail.com](mailto:jmuzi04@gmail.com) · [GitHub](https://github.com/Josh-Muzi) · [LinkedIn](https://www.linkedin.com/in/joshua-muzi-707386b2)

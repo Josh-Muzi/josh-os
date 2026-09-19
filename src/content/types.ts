@@ -14,7 +14,8 @@ export interface Notice {
   cta?: { label: string; href: string };
   /**
    * Absolute end time, ISO 8601 WITH a UTC offset, e.g.
-   * "2026-09-26T23:59:59-07:00". The notice disables itself after this.
+   * "2026-09-26T23:59:59-07:00". The notice disables itself after this;
+   * without an offset it never shows (see `isNoticeLive`).
    */
   expires: string;
 }

@@ -24,12 +24,31 @@ const Desktop = dynamic(
 type Mode = "plain" | "desktop";
 const MODE_KEY = "joshos:mode";
 
-export function Experience() {
+// localStorage throws when storage is blocked (Safari "Block all cookies",
+// some private modes, sandboxed embeds); treat that as "nothing stored".
+function readStoredMode(): Mode | null {
+  try {
+    const stored = window.localStorage.getItem(MODE_KEY);
+    return stored === "plain" || stored === "desktop" ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+function storeMode(mode: Mode) {
+  try {
+    window.localStorage.setItem(MODE_KEY, mode);
+  } catch {
+    // Storage blocked: the choice lasts for this visit only.
+  }
+}
+
+export function Experience({ noticeLive }: { noticeLive: boolean }) {
   const [mode, setMode] = useState<Mode>("plain");
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(MODE_KEY);
-    if (stored === "plain" || stored === "desktop") {
+    const stored = readStoredMode();
+    if (stored) {
       setMode(stored);
       return;
     }
@@ -41,7 +60,7 @@ export function Experience() {
   }, []);
 
   const switchMode = (next: Mode) => {
-    window.localStorage.setItem(MODE_KEY, next);
+    storeMode(next);
     setMode(next);
   };
 
@@ -51,7 +70,7 @@ export function Experience() {
 
   return (
     <>
-      <PlainSite />
+      <PlainSite noticeLive={noticeLive} />
       <button
         type="button"
         onClick={() => switchMode("desktop")}

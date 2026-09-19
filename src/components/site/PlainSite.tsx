@@ -1,4 +1,5 @@
 import { contactLinks, profile } from "@/content";
+import { NoticeBanner } from "./NoticeBanner";
 import {
   AboutSection,
   EducationSection,
@@ -7,7 +8,7 @@ import {
   SkillsSection,
 } from "./Sections";
 
-export function PlainSite() {
+export function PlainSite({ noticeLive }: { noticeLive: boolean }) {
   return (
     <div className="mx-auto max-w-2xl px-6 py-12 sm:py-16">
       <a
@@ -25,6 +26,13 @@ export function PlainSite() {
         </h1>
         <p className="mt-1 text-lg text-neutral-600">
           {profile.title} · {profile.location}
+          {profile.availability ? (
+            // Own line on phones so a wrapped "·" never dangles.
+            <>
+              <span className="hidden sm:inline"> · </span>
+              <span className="block sm:inline">{profile.availability}</span>
+            </>
+          ) : null}
         </p>
         <nav
           aria-label="Contact"
@@ -40,6 +48,9 @@ export function PlainSite() {
             </a>
           ))}
         </nav>
+        {profile.notice ? (
+          <NoticeBanner notice={profile.notice} initiallyLive={noticeLive} />
+        ) : null}
       </header>
       <main id="main" className="mt-12 space-y-12">
         <AboutSection />

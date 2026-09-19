@@ -6,6 +6,8 @@ import { AppContent } from "./AppContent";
 import { AppWindow } from "./AppWindow";
 import { APPS, type AppDefinition, type AppId } from "./apps";
 import { DesktopIcon } from "./DesktopIcon";
+import { NoticeWidget, useDesktopNotice } from "./DesktopNotice";
+import { iconGrid } from "./iconLayout";
 import { StartMenu } from "./StartMenu";
 import { Taskbar } from "./Taskbar";
 import {
@@ -44,9 +46,9 @@ function rowsPerColumn() {
 
 /**
  * Home position for each icon. Apps declare a desktop column (0 =
- * portfolio, 1 = games, right of About Me); within a column, icons
- * stack top-down and wrap before they'd collide with the taskbar.
- * The Compost Bin lives bottom-right and takes no column slot.
+ * portfolio, 1 = games, right of About Me); see `iconGrid` for the flow,
+ * wrap and `desktopBeside` rules. The Compost Bin lives bottom-right and
+ * takes no grid cell.
  */
 function iconHome(app: AppDefinition, rows = rowsPerColumn(), ssr = false) {
   if (app.id === "compost") {
@@ -54,15 +56,15 @@ function iconHome(app: AppDefinition, rows = rowsPerColumn(), ssr = false) {
       ? { x: 16, y: 16 }
       : compostHome();
   }
-  const column = app.desktopColumn ?? 0;
-  const siblings = APPS.filter(
-    (a) => a.id !== "compost" && (a.desktopColumn ?? 0) === column,
+  const grid = iconGrid(
+    APPS.filter((a) => a.id !== "compost"),
+    rows,
   );
-  const slot = siblings.findIndex((a) => a.id === app.id);
-  // Overflow within a declared column wraps to the next column over.
-  const col = column + Math.floor(slot / rows);
-  const row = slot % rows;
-  return { x: 16 + col * ICON_STEP_X, y: ICON_TOP + row * ICON_STEP_Y };
+  const cell = grid.get(app.id) ?? { col: 0, row: 0 };
+  return {
+    x: 16 + cell.col * ICON_STEP_X,
+    y: ICON_TOP + cell.row * ICON_STEP_Y,
+  };
 }
 
 export function Desktop({ onSwitchToPlain }: DesktopProps) {
@@ -78,6 +80,7 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
   const { open } = useWindowActions();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const notice = useDesktopNotice();
   const [iconPositions, setIconPositions] = useState(() =>
     // Deterministic on server and first client render (no window
     // access) so hydration matches; the effect below re-homes.
@@ -413,6 +416,13 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
           );
         })}
       </div>
+      {notice.visible ? (
+        <NoticeWidget
+          notice={notice.notice}
+          isMobile={isMobile}
+          onClose={notice.dismiss}
+        />
+      ) : null}
       {menuOpen && (
         <StartMenu
           onClose={() => setMenuOpen(false)}

@@ -35,6 +35,8 @@ export interface AppDefinition {
   inStartMenu?: boolean;
   /** Desktop icon column (0 = portfolio, 1 = games). Defaults to 0. */
   desktopColumn?: number;
+  /** Take the cell right of this app's icon instead of a column slot (see iconGrid). */
+  desktopBeside?: AppId;
 }
 
 export const APPS: AppDefinition[] = [
@@ -79,6 +81,9 @@ export const APPS: AppDefinition[] = [
     label: "Contact",
     icon: MailIcon,
     defaultSize: { width: 420, height: 320 },
+    // The bottom-left of the wallpaper (stepping stones) swallows a label,
+    // so Contact lives right of Resume, over open grass.
+    desktopBeside: "resume",
   },
   {
     id: "compost",

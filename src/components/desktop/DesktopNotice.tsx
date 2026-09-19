@@ -51,8 +51,10 @@ export function useDesktopNotice(): DesktopNotice {
  * A note pinned to the wallpaper — never a gate. It sits above the icons
  * and under any open window: top-right on desktop, docked above the
  * taskbar on phones (where the icon grid owns the top of the screen).
- * On very short phone screens (landscape) there's no room that doesn't
- * cover icons, so it stays out of the way; boring mode still carries it.
+ * On a short phone screen there's no room that doesn't cover icons, so
+ * the phone layout hides it; boring mode still carries it. (A landscape
+ * phone is wider than the mobile breakpoint and gets the desktop layout,
+ * where the top-right corner is clear of the icon columns.)
  */
 export function NoticeWidget({
   notice,

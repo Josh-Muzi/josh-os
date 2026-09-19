@@ -24,6 +24,7 @@ export function ResumeWindow() {
       </div>
       <p className="text-xs text-neutral-500">
         {profile.location} ·{" "}
+        {profile.availability ? `${profile.availability} · ` : null}
         {contactLinks.map((link) => link.value).join(" · ")}
       </p>
       <Panel title="Experience">

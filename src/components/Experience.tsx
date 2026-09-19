@@ -24,7 +24,7 @@ const Desktop = dynamic(
 type Mode = "plain" | "desktop";
 const MODE_KEY = "joshos:mode";
 
-export function Experience() {
+export function Experience({ noticeLive }: { noticeLive: boolean }) {
   const [mode, setMode] = useState<Mode>("plain");
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export function Experience() {
 
   return (
     <>
-      <PlainSite />
+      <PlainSite noticeLive={noticeLive} />
       <button
         type="button"
         onClick={() => switchMode("desktop")}

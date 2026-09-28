@@ -18,7 +18,7 @@ export function NoticeBanner({
   return (
     <aside
       aria-label="Announcement"
-      className="mt-6 rounded-lg border border-emerald-700/20 bg-emerald-50 px-4 py-3 text-sm leading-relaxed text-emerald-900"
+      className="mt-6 rounded-lg border border-emerald-700/20 bg-emerald-50 px-4 py-3 text-sm leading-relaxed text-emerald-900 dark:border-emerald-400/20 dark:bg-emerald-950/50 dark:text-emerald-100"
     >
       <p>
         {notice.text}
@@ -27,7 +27,7 @@ export function NoticeBanner({
             {" "}
             <a
               href={notice.cta.href}
-              className="font-medium whitespace-nowrap text-emerald-700 underline underline-offset-4 hover:text-emerald-800"
+              className="font-medium whitespace-nowrap text-emerald-700 underline underline-offset-4 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
             >
               {notice.cta.label} →
             </a>

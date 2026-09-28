@@ -30,7 +30,10 @@ export function AboutSection() {
   return (
     <Section id="about" title="About">
       {profile.aboutParagraphs.map((paragraph) => (
-        <p key={paragraph} className="leading-relaxed text-neutral-700">
+        <p
+          key={paragraph}
+          className="leading-relaxed text-neutral-700 dark:text-neutral-300"
+        >
           {paragraph}
         </p>
       ))}
@@ -48,7 +51,7 @@ export function ExperienceSection() {
             {job.companyUrl ? (
               <a
                 href={job.companyUrl}
-                className="text-emerald-700 underline-offset-4 hover:underline"
+                className="text-emerald-700 underline-offset-4 hover:underline dark:text-emerald-400"
               >
                 {job.company}
               </a>
@@ -56,19 +59,21 @@ export function ExperienceSection() {
               job.company
             )}
           </h3>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
             {formatJobDates(job)} · {job.location}
           </p>
           {job.summary && (
-            <p className="mt-2 text-neutral-700">{job.summary}</p>
+            <p className="mt-2 text-neutral-700 dark:text-neutral-300">
+              {job.summary}
+            </p>
           )}
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-neutral-700">
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-neutral-700 dark:text-neutral-300">
             {job.highlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>
             ))}
           </ul>
           {job.stack && (
-            <p className="mt-2 text-sm text-neutral-500">
+            <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
               {job.stack.join(" · ")}
             </p>
           )}
@@ -86,27 +91,32 @@ export function ProjectsSection() {
           <h3 className="font-semibold">
             {project.name}
             {project.status === "in-progress" && (
-              <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800">
+              <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200">
                 in progress
               </span>
             )}
           </h3>
-          <p className="mt-1 text-neutral-700">{project.tagline}</p>
+          <p className="mt-1 text-neutral-700 dark:text-neutral-300">
+            {project.tagline}
+          </p>
           <div className="mt-2 space-y-2">
             {project.description.map((paragraph) => (
-              <p key={paragraph} className="text-neutral-700">
+              <p
+                key={paragraph}
+                className="text-neutral-700 dark:text-neutral-300"
+              >
                 {paragraph}
               </p>
             ))}
           </div>
-          <p className="mt-2 text-sm text-neutral-500">
+          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
             {project.stack.join(" · ")}
           </p>
           <p className="mt-2 text-sm">
             {project.repoUrl && (
               <a
                 href={project.repoUrl}
-                className="font-medium text-emerald-700 underline-offset-4 hover:underline"
+                className="font-medium text-emerald-700 underline-offset-4 hover:underline dark:text-emerald-400"
               >
                 Source on GitHub
               </a>
@@ -125,7 +135,9 @@ export function SkillsSection() {
         {skills.map((group) => (
           <div key={group.label} className="sm:flex sm:gap-4">
             <dt className="w-40 shrink-0 font-medium">{group.label}</dt>
-            <dd className="text-neutral-700">{group.items.join(", ")}</dd>
+            <dd className="text-neutral-700 dark:text-neutral-300">
+              {group.items.join(", ")}
+            </dd>
           </div>
         ))}
       </dl>
@@ -139,14 +151,18 @@ export function EducationSection() {
     <Section id="education" title="Education">
       <article>
         <h3 className="font-semibold">{education.school}</h3>
-        <p className="text-neutral-700">{education.degree}</p>
+        <p className="text-neutral-700 dark:text-neutral-300">
+          {education.degree}
+        </p>
         {education.minors && education.minors.length > 0 && (
-          <p className="text-neutral-700">
+          <p className="text-neutral-700 dark:text-neutral-300">
             {education.minors.length > 1 ? "Minors" : "Minor"}:{" "}
             {education.minors.join(", ")}
           </p>
         )}
-        <p className="text-sm text-neutral-500">{education.years}</p>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+          {education.years}
+        </p>
       </article>
     </Section>
   );

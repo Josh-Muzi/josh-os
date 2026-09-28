@@ -18,13 +18,13 @@ export function PlainSite({ noticeLive }: { noticeLive: boolean }) {
         Skip to content
       </a>
       <header>
-        <p className="text-sm font-medium tracking-widest text-emerald-700 uppercase">
+        <p className="text-sm font-medium tracking-widest text-emerald-700 uppercase dark:text-emerald-400">
           JoshOS
         </p>
         <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">
           {profile.name}
         </h1>
-        <p className="mt-1 text-lg text-neutral-600">
+        <p className="mt-1 text-lg text-neutral-600 dark:text-neutral-400">
           {profile.title} · {profile.location}
           {profile.availability ? (
             // Own line on phones so a wrapped "·" never dangles.
@@ -42,7 +42,7 @@ export function PlainSite({ noticeLive }: { noticeLive: boolean }) {
             <a
               key={link.href}
               href={link.href}
-              className="font-medium text-emerald-700 underline-offset-4 hover:underline"
+              className="font-medium text-emerald-700 underline-offset-4 hover:underline dark:text-emerald-400"
             >
               {link.label}
             </a>
@@ -59,7 +59,7 @@ export function PlainSite({ noticeLive }: { noticeLive: boolean }) {
         <SkillsSection />
         <EducationSection />
       </main>
-      <footer className="mt-16 border-t border-neutral-200 pt-6 text-sm text-neutral-500">
+      <footer className="mt-16 border-t border-neutral-200 pt-6 text-sm text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
         <p>© {new Date().getFullYear()} Josh Muzi</p>
       </footer>
     </div>

@@ -245,6 +245,9 @@ function DesktopInner({ onSwitchToPlain }: DesktopProps) {
         // Meadow diorama wallpaper (Josh's generated art); the gradient
         // remains beneath as a fallback while the image loads.
         background: `url(${wallpaper.src}) center / cover no-repeat, linear-gradient(180deg, #ACC99C 0%, #9CBF87 100%)`,
+        // JoshOS is always light: its windows are white, so native
+        // scrollbars and controls stay light even if boring mode is dark.
+        colorScheme: "light",
       }}
     >
       {/* Invisible per-drag bounds for icon dragging (see dragBoundsRef).

@@ -1,8 +1,19 @@
 @import "tailwindcss";
 
+/* Dark mode is a manual choice (data-theme on <html>), not the OS media
+   query, so the toggle in boring mode can override the system setting.
+   The desktop never uses `dark:` classes, so it is unaffected. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --background: #0d1210;
+  --foreground: #ededed;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -12,7 +23,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* V1 is deliberately light-only; dark mode is parked in the V2 list. */
 body {
   background: var(--background);
   color: var(--foreground);

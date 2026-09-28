@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { PlainSite } from "./site/PlainSite";
+import { ThemeToggle } from "./site/ThemeToggle";
 
 // The desktop bundle (react-rnd, window manager) loads only when
 // desktop mode engages — plain mode never pays for it.
@@ -13,7 +14,7 @@ const Desktop = dynamic(
     loading: () => (
       <div
         className="flex h-dvh items-center justify-center text-white"
-        style={{ background: "#9cbf87" }}
+        style={{ background: "#9cbf87", colorScheme: "light" }}
       >
         <p>Starting JoshOS…</p>
       </div>
@@ -71,13 +72,16 @@ export function Experience({ noticeLive }: { noticeLive: boolean }) {
   return (
     <>
       <PlainSite noticeLive={noticeLive} />
-      <button
-        type="button"
-        onClick={() => switchMode("desktop")}
-        className="fixed top-4 right-4 z-50 rounded-full border border-emerald-800/20 bg-white/90 px-4 py-2 text-sm font-medium text-emerald-800 shadow-md backdrop-blur hover:bg-white"
-      >
-        Launch JoshOS →
-      </button>
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <ThemeToggle />
+        <button
+          type="button"
+          onClick={() => switchMode("desktop")}
+          className="rounded-full border border-emerald-800/20 bg-white/90 px-4 py-2 text-sm font-medium text-emerald-800 shadow-md backdrop-blur hover:bg-white dark:border-emerald-400/20 dark:bg-neutral-900/90 dark:text-emerald-300 dark:hover:bg-neutral-800"
+        >
+          Launch JoshOS →
+        </button>
+      </div>
     </>
   );
 }

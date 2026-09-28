@@ -470,22 +470,27 @@ export function PondGame() {
       if (e.repeat) return; // discrete actions fire once per press
       if (actionLocked) return; // catch-card lock eats stray presses
       if (phase === "idle") cast();
-      else if (phase === "bite") hookIt();
-      else if (phase === "caught" || phase === "escaped") reset();
+      else if (phase === "bite") {
+        hookIt();
+        holdingRef.current = true; // keep holding straight into the reel
+      } else if (phase === "caught" || phase === "escaped") reset();
     };
     const up = (e: KeyboardEvent) => {
       if (e.code === "Space") holdingRef.current = false;
     };
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
+    // No holdingRef reset here: this effect re-runs on every phase change,
+    // and resetting would drop a hold that began on HOOK IT the instant the
+    // phase became "reeling". The reel effect below owns that reset.
     return () => {
-      holdingRef.current = false;
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
     };
   }, [phase, actionLocked, cast, hookIt, reset]);
 
-  // Safety net: releasing anywhere (or losing window focus) stops reeling.
+  // Safety net: releasing anywhere (or losing window focus) stops reeling,
+  // and leaving the reeling phase for any reason clears the hold.
   useEffect(() => {
     if (phase !== "reeling") return;
     const release = () => {
@@ -494,6 +499,7 @@ export function PondGame() {
     window.addEventListener("pointerup", release);
     window.addEventListener("blur", release);
     return () => {
+      holdingRef.current = false;
       window.removeEventListener("pointerup", release);
       window.removeEventListener("blur", release);
     };
@@ -961,136 +967,144 @@ export function PondGame() {
                     )}
                   </div>
                 )}
+                {/* Reel meter: a HUD over the water, not a row in the
+                    column, so the tackle box and the action button never
+                    move when a fish bites. The scene's own pointer handler
+                    makes pressing the HUD a hold, like the rest of the water. */}
+                {phase === "reeling" && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 8,
+                      right: 8,
+                      bottom: 8,
+                      padding: "8px 10px",
+                      borderRadius: 8,
+                      // Legibility over the scene art: the idle card's plate.
+                      background: "rgba(10, 14, 20, 0.55)",
+                      border: "1px solid rgba(255,255,255,0.18)",
+                      color: "#f4f1ea",
+                      textShadow: "1px 1px rgba(0,0,0,0.6)",
+                      userSelect: "none",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        letterSpacing: 0.5,
+                        color: inZone ? "#8fe0a3" : "#f29a9a",
+                        marginBottom: 3,
+                      }}
+                    >
+                      <span>LINE TENSION</span>
+                      <span>{inZone ? "HOLDING" : "SLIPPING"}</span>
+                    </div>
+                    {/* The gauge: a fishing line under load. The green band is
+                        the safe tension window; the marker is your pull. The
+                        track is neutral on purpose: slack (left) and tight
+                        (right) drain progress the same, so only the band means
+                        anything. It matches the haul bar below. */}
+                    <div
+                      className={inZone ? undefined : "pond-gauge--strain"}
+                      style={{
+                        position: "relative",
+                        height: 28,
+                        borderRadius: 6,
+                        border: "1px solid #b8b3a6",
+                        background: "#fff",
+                        boxShadow: inZone
+                          ? "0 1px 3px rgba(0,0,0,0.35)"
+                          : "0 1px 3px rgba(0,0,0,0.35), 0 0 10px rgba(211,51,51,0.6)",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {/* The line itself, taut across the gauge */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: 0,
+                          right: 0,
+                          height: 2,
+                          background: inZone ? "#2b2b27" : "#b02a2a",
+                          opacity: 0.45,
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          bottom: 0,
+                          left: `${(zone.center - zone.width / 2) * 100}%`,
+                          width: `${zone.width * 100}%`,
+                          background: "rgba(43, 158, 68, 0.4)",
+                          borderLeft: "2px solid #1b6b2e",
+                          borderRight: "2px solid #1b6b2e",
+                        }}
+                      />
+                      {/* The marker: kept fully inside the track at 0% and
+                          100% (it used to be half-clipped at the ends), with a
+                          dark outline so it reads on white and on the band. */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: 2,
+                          bottom: 2,
+                          left: `calc(${needle * 100}% - ${needle * 10}px)`,
+                          width: 10,
+                          borderRadius: 3,
+                          background: inZone ? "#1b6b2e" : "#b02a2a",
+                          boxShadow: "0 0 0 2px #fff, 0 0 0 3px #2b2b27",
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#9cc4ee",
+                        marginTop: 6,
+                        marginBottom: 3,
+                      }}
+                    >
+                      <span>HAULING IN</span>
+                      <span>{Math.round(progress * 100)}%</span>
+                    </div>
+                    <div
+                      style={{
+                        height: 10,
+                        borderRadius: 5,
+                        border: "1px solid #b8b3a6",
+                        background: "#fff",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {/* scaleX (not a % width): exact per frame at 60fps,
+                          no layout, nothing for a transition to fight. */}
+                      <div
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                          transformOrigin: "left center",
+                          transform: `scaleX(${Math.min(1, Math.max(0, progress))})`,
+                          background:
+                            "linear-gradient(90deg, #6aa5dc, #3b6ea5)",
+                          willChange: "transform",
+                        }}
+                      />
+                    </div>
+                    <div style={{ fontSize: 12, marginTop: 4, opacity: 0.85 }}>
+                      Hold the button below (or SPACE) to keep the line in the
+                      green.
+                    </div>
+                  </div>
+                )}
               </div>
-
-              {/* Reel meter */}
-              {phase === "reeling" && (
-                <div
-                  onPointerDown={() => {
-                    holdingRef.current = true;
-                  }}
-                  onPointerUp={() => {
-                    holdingRef.current = false;
-                  }}
-                  onPointerLeave={() => {
-                    holdingRef.current = false;
-                  }}
-                  style={{
-                    userSelect: "none",
-                    touchAction: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: 0.5,
-                      color: inZone ? "#1b6b2e" : "#b02a2a",
-                      marginBottom: 3,
-                    }}
-                  >
-                    <span>LINE TENSION</span>
-                    <span>{inZone ? "HOLDING" : "SLIPPING"}</span>
-                  </div>
-                  {/* The gauge: a fishing line under load. The green band is
-                      the safe tension window; the marker is your pull. */}
-                  <div
-                    className={inZone ? undefined : "pond-gauge--strain"}
-                    style={{
-                      position: "relative",
-                      height: 28,
-                      borderRadius: 6,
-                      border: "1px solid #b8b3a6",
-                      background:
-                        "linear-gradient(90deg, #bfe3c7 0%, #e7e2cf 45%, #f2c1b0 100%)",
-                      boxShadow: inZone
-                        ? "inset 0 1px 2px rgba(0,0,0,0.15)"
-                        : "inset 0 1px 2px rgba(0,0,0,0.15), 0 0 10px rgba(211,51,51,0.45)",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {/* The line itself, taut across the gauge */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: 0,
-                        right: 0,
-                        height: 2,
-                        background: inZone ? "#2b2b27" : "#b02a2a",
-                        opacity: 0.55,
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        bottom: 0,
-                        left: `${(zone.center - zone.width / 2) * 100}%`,
-                        width: `${zone.width * 100}%`,
-                        background: "rgba(43, 158, 68, 0.35)",
-                        borderLeft: "2px solid #1b6b2e",
-                        borderRight: "2px solid #1b6b2e",
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 3,
-                        bottom: 3,
-                        left: `calc(${needle * 100}% - 4px)`,
-                        width: 8,
-                        borderRadius: 3,
-                        background: inZone ? "#1b6b2e" : "#b02a2a",
-                        boxShadow: "0 0 0 2px #fff",
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: "#3b6ea5",
-                      marginTop: 6,
-                      marginBottom: 3,
-                    }}
-                  >
-                    <span>HAULING IN</span>
-                    <span>{Math.round(progress * 100)}%</span>
-                  </div>
-                  <div
-                    style={{
-                      height: 10,
-                      borderRadius: 5,
-                      border: "1px solid #b8b3a6",
-                      background: "#fff",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {/* scaleX (not a % width): exact per frame at 60fps,
-                        no layout, nothing for a transition to fight. */}
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        transformOrigin: "left center",
-                        transform: `scaleX(${Math.min(1, Math.max(0, progress))})`,
-                        background: "linear-gradient(90deg, #6aa5dc, #3b6ea5)",
-                        willChange: "transform",
-                      }}
-                    />
-                  </div>
-                  <div style={{ fontSize: 12, marginTop: 4, color: "#555" }}>
-                    Hold the button below (or SPACE) to keep the line in the
-                    green.
-                  </div>
-                </div>
-              )}
 
               {/* Tackle box: bait chips + buy, and progress to new waters */}
               <div
@@ -1236,6 +1250,7 @@ export function PondGame() {
                 style={{
                   ...BTN,
                   height: 48,
+                  flexShrink: 0,
                   fontWeight: 700,
                   fontSize: 15,
                   touchAction: "none",
